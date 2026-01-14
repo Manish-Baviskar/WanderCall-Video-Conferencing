@@ -34,8 +34,8 @@ A robust full-stack video conferencing application built with the MERN stack. Wa
   </tr>
   <tr>
     <td><img src="assets/meetingHistory.png" width="100%" /></td>
-    <td><img src="assets/meetView.png" width="100%" /></td>
     <td><img src="assets/chatMeetView.png" width="100%" /></td>
+    <td><img src="assets/meetView.png" width="100%" /></td>
   </tr>
 </table>
 
