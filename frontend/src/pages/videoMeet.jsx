@@ -88,25 +88,27 @@ export default function VideoMeetComponent() {
     }, [])
 
    let getDislayMedia = () => {
+        // Case 1: Start Sharing
         if (screen) {
-            
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
-                    .then((stream) => { })
                     .catch((e) => {
                         console.log(e);
-                        setScreen(false);
-                    })
+                        setScreen(false); // Reset button if user cancels
+                    });
             }
-        } else {
+        } 
+        // Case 2: Stop Sharing
+        else {
+            // STOP the tracks directly from the global stream variable
+            if (window.localStream) {
+                window.localStream.getTracks().forEach(track => track.stop());
+            }
             
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-            } catch (e) {
-                console.log(e);
-            }
+            // Force the camera to restart immediately
+            setScreen(false);
+            getUserMedia(); 
         }
     }
 
@@ -368,11 +370,31 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        setVideo(!video);
-        if (window.localStream) {
-            const videoTrack = window.localStream.getVideoTracks()[0];
-            if (videoTrack) {
-                videoTrack.enabled = !videoTrack.enabled;
+        const newVideoState = !video; // What we want the state to be
+        setVideo(newVideoState);
+        
+        // If we are turning Video ON
+        if (newVideoState === true) {
+            // Check if we actually have a valid video track
+            const hasVideoTrack = window.localStream && 
+                                  window.localStream.getVideoTracks().length > 0 && 
+                                  window.localStream.getVideoTracks()[0].readyState === 'live';
+
+            if (!hasVideoTrack) {
+                // No video track found? We must request the camera again!
+                getUserMedia();
+            } else {
+                // Video track exists, just enable it
+                window.localStream.getVideoTracks()[0].enabled = true;
+            }
+        } 
+        // If we are turning Video OFF
+        else {
+            if (window.localStream) {
+                const videoTrack = window.localStream.getVideoTracks()[0];
+                if (videoTrack) {
+                    videoTrack.enabled = false;
+                }
             }
         }
     }
