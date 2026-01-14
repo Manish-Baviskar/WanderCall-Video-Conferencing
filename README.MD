@@ -52,6 +52,7 @@ root
 ├── frontend/          # React Client (Vite/CRA)
 ├── backend/           # Node.js Server & API
 └── README.md          # Documentation
+```
 
 ## ⚙️ Installation & Run Locally
 
@@ -132,5 +133,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 📞 Contact
 
 Your Name - [MANISH BAVISKAR](https://www.linkedin.com/in/manishbaviskar)
-Project Link: [https://github.com/your-username/WanderCall-Video-Meet](https://github.com/your-username/WanderCall-Video-Meet)
+Project Link: [https://github.com/Manish-Baviskar/WanderCall-Video-Meet](https://github.com/Manish_Baviskar/WanderCall-Video-Meet)
 
