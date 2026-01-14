@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
-import { Snackbar } from '@mui/material';
+import { Snackbar, CircularProgress } from '@mui/material';
 
 
 const defaultTheme = createTheme({
@@ -26,10 +26,13 @@ export default function Authentication() {
   const [message, setMessage] = React.useState("");
   const [formState, setFormState] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
   const handleAuth = async () => {
+    setIsLoading(true);
     try {
       if (formState === 0) {
         await handleLogin(username, password);
@@ -45,6 +48,10 @@ export default function Authentication() {
     } catch (err) {
       let msg = err.response?.data?.message || "Something went wrong";
       setError(msg);
+    }
+    finally {
+      // 2. Stop Loading (This runs even if there is an error)
+      setIsLoading(false);
     }
   };
 
@@ -157,11 +164,18 @@ export default function Authentication() {
               <Button
                 type="button"
                 fullWidth
-                variant="contained"
+                variant="contained" 
+                disabled={isLoading}
                 sx={{ mt: 3, mb: 2, bgcolor: '#ffa500', color: 'black', fontWeight: 'bold' }}
                 onClick={handleAuth}
               >
-                {formState === 0 ? "Login" : "Register"}
+                {isLoading ? (
+                    // Show Spinner
+                    <CircularProgress size={24} color="inherit" />
+                ) : (
+                    // Show Text
+                    formState === 0 ? "Login" : "Register"
+                )}
               </Button>
 
               <Button 

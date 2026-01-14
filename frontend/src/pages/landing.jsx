@@ -7,9 +7,9 @@ export default function LandingPage(){
     const router = useNavigate();
   return (
     <div className='landingPageContainer'>
-        <img src="/dots-top.png" alt="" className="pattern patternTop" />
+        <img src="/dots-top.webp" alt="" className="pattern patternTop" />
       
-      <img src="/dots-bottom.png" alt="" className="pattern patternBottom" />
+      <img src="/dots-bottom.webp" alt="" className="pattern patternBottom" />
         <nav>
             <div className='navHeader'>
                 <h2>
@@ -39,7 +39,7 @@ export default function LandingPage(){
                 <div role='button' className="get-started-btn anim-element anim-delay-3"><Link to={"/auth"}>Get Started</Link></div>
             </div>
             <div>
-                <img src='/mobile.png' className="anim-element anim-delay-4"></img>
+                <img src='/mobile.webp' className="anim-element anim-delay-4"></img>
             </div>
         </div>
 
