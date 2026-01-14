@@ -1,0 +1,116 @@
+
+.historyContainer {
+    min-height: 100vh;
+    width: 100vw;
+    background: rgb(1, 4, 48); 
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.header {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 0;
+}
+
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+.historyCard {
+    background: rgba(255, 255, 255, 0.05) !important; 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+
+.historyCard:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2); 
+    border-color: #007bff !important;
+}
+
+
+.cardCode {
+    font-weight: bold !important;
+    color: #007bff !important; 
+    margin-bottom: 5px !important;
+}
+
+.cardDate {
+    color: #aaaaaa !important; 
+}
+
+
+.emptyState {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.5rem;
+    margin-top: 50px;
+    text-align: center;
+}
+
+
+.backBtn {
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+.backBtn:hover {
+    background: #007bff !important;
+    border-color: #007bff !important;
+    transform: scale(1.1);
+}
+
+
+
+@media (max-width: 600px) {
+    
+    .historyContainer {
+        padding: 10px;
+    }
+
+    
+    .cardGrid {
+        grid-template-columns: 1fr; 
+    }
+
+    
+    .title {
+        font-size: 1.5rem;
+    }
+
+    
+    .header {
+        flex-direction: row; 
+        margin-bottom: 20px;
+    }
+}

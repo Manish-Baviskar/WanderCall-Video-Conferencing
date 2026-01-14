@@ -1,0 +1,188 @@
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AuthContext } from '../contexts/AuthContext';
+import { Snackbar } from '@mui/material';
+
+
+const defaultTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+export default function Authentication() {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const [formState, setFormState] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+  const handleAuth = async () => {
+    try {
+      if (formState === 0) {
+        await handleLogin(username, password);
+      } else {
+        await handleRegister(name, username, password);
+        setUsername("");
+        setPassword("");
+        setName("");
+        setFormState(0);
+        setMessage("Registration Successful! Please login.");
+        setOpen(true);
+      }
+    } catch (err) {
+      let msg = err.response?.data?.message || "Something went wrong";
+      setError(msg);
+    }
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      
+      
+      <Box sx={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+        
+        
+        <Box
+          sx={{
+            flex: 0.7, // 70% width
+            display: { xs: 'none', md: 'flex' }, // Hide on mobile, show on desktop
+            backgroundImage: 'url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) => t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            p: 4, 
+          }}
+        >
+          
+          <Box
+            sx={{
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              padding: '15px 25px',
+              borderRadius: '15px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              maxWidth: 'fit-content',
+              mb: 4,
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#ffa500' }}>
+              WanderCall
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'white', opacity: 0.9 }}>
+              Designed & Developed by <b>Manish Baviskar</b>
+            </Typography>
+          </Box>
+        </Box>
+
+        
+        <Box
+            component={Paper}
+            elevation={6}
+            square
+            sx={{
+                flex: { xs: 1, md: 0.3 }, 
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 4
+            }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '400px' }}>
+            <Avatar sx={{ m: 1, bgcolor: '#ffa500' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            
+            <Typography component="h1" variant="h5">
+              {formState === 0 ? "Sign In" : "Sign Up"}
+            </Typography>
+
+            <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
+              
+              {formState === 1 && (
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="Full Name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                  {error}
+              </Typography>
+
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, bgcolor: '#ffa500', color: 'black', fontWeight: 'bold' }}
+                onClick={handleAuth}
+              >
+                {formState === 0 ? "Login" : "Register"}
+              </Button>
+
+              <Button 
+                fullWidth 
+                sx={{ color: '#ffa500' }} 
+                onClick={() => { setFormState(formState === 0 ? 1 : 0); setError(""); }}
+              >
+                {formState === 0 ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+
+      </Box>
+      
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={() => setOpen(false)}
+        message={message}
+      />
+    </ThemeProvider>
+  );
+}
