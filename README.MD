@@ -14,6 +14,31 @@ A robust full-stack video conferencing application built with the MERN stack. Wa
 -   **Room Management:** Dynamic room creation and joining logic.
 -   **Responsive Design:** Works on desktop and mobile browsers.
 
+## 📸 Application Previews
+
+<table>
+  <tr>
+    <td align="center"><b>Landing Page</b></td>
+    <td align="center"><b>Login & Signup</b></td>
+    <td align="center"><b>Home Dashboard</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/landingPage.png" width="100%" /></td>
+    <td><img src="assets/loginSignupPage.png" width="100%" /></td>
+    <td><img src="assets/homePage.png" width="100%" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Meeting History</b></td>
+    <td align="center"><b>Video Meeting</b></td>
+    <td align="center"><b>In-Call Chat</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/meetingHistory.png" width="100%" /></td>
+    <td><img src="assets/meetView.png" width="100%" /></td>
+    <td><img src="assets/chatMeetView.png" width="100%" /></td>
+  </tr>
+</table>
+
 ## 🏗️ Architecture & Protocols
 
 WanderCall relies on a hybrid architecture combining **Client-Server** signaling and **Peer-to-Peer (P2P)** media streaming.
