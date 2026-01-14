@@ -160,24 +160,41 @@ export default function VideoMeetComponent() {
             window.localStream.getTracks().forEach(track => track.stop())
         } catch (e) { console.log(e) }
 
+        // 1. Set the new stream
         window.localStream = stream
         localVideoref.current.srcObject = stream
+
+        // -----------------------------------------------------------
+        // THE FIX: Apply existing Audio/Video settings to the new stream
+        // -----------------------------------------------------------
+        // Ensure the new audio track matches your current Mute button state
+        if (stream.getAudioTracks().length > 0) {
+            stream.getAudioTracks()[0].enabled = audio; 
+        }
+        
+        // Ensure the new video track matches your current Video button state
+        if (stream.getVideoTracks().length > 0) {
+            stream.getVideoTracks()[0].enabled = video;
+        }
+        // -----------------------------------------------------------
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue
 
-            // -----------------------------------------------------------
-            // THE FIX: Replace the track instead of just adding a new stream
-            // -----------------------------------------------------------
+            // Swap the track so the other person sees the new stream
             let videoTrack = stream.getVideoTracks()[0];
-            let sender = connections[id].getSenders().find(s => s.track.kind === videoTrack.kind);
+            let audioTrack = stream.getAudioTracks()[0]; // Grab new audio too
+
+            let videoSender = connections[id].getSenders().find(s => s.track.kind === "video");
+            let audioSender = connections[id].getSenders().find(s => s.track.kind === "audio");
             
-            if (sender) {
-                sender.replaceTrack(videoTrack);
-            } else {
+            if (videoSender && videoTrack) videoSender.replaceTrack(videoTrack);
+            if (audioSender && audioTrack) audioSender.replaceTrack(audioTrack);
+
+            // If no sender existed, add stream cleanly (fallback)
+            if (!videoSender && !audioSender) {
                 connections[id].addStream(window.localStream);
             }
-            // -----------------------------------------------------------
 
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
@@ -201,16 +218,7 @@ export default function VideoMeetComponent() {
             window.localStream = blackSilence()
             localVideoref.current.srcObject = window.localStream
 
-            for (let id in connections) {
-                connections[id].addStream(window.localStream)
-                connections[id].createOffer().then((description) => {
-                    connections[id].setLocalDescription(description)
-                        .then(() => {
-                            socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connections[id].localDescription }))
-                        })
-                        .catch(e => console.log(e))
-                })
-            }
+            getUserMedia()
         })
     }
     // ----------------------------------------------------
@@ -419,12 +427,12 @@ export default function VideoMeetComponent() {
     }
 
     let handleAudio = () => {
-        setAudio(!audio)
-        if (window.localStream) {
-            const audioTrack = window.localStream.getAudioTracks()[0];
-            if (audioTrack) {
-                audioTrack.enabled = !audioTrack.enabled;
-            }
+        const newAudioState = !audio; // Calculate what we WANT
+        setAudio(newAudioState);      // Update the UI button
+
+        // Force the actual microphone track to match
+        if (window.localStream && window.localStream.getAudioTracks().length > 0) {
+            window.localStream.getAudioTracks()[0].enabled = newAudioState;
         }
     }
 
