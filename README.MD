@@ -64,6 +64,7 @@ root
 ```bash
 git clone [https://github.com/Manish-Baviskar/WanderCall-Video-Meet.git](https://github.com/Manish-Baviskar/WanderCall-Video-Meet.git)
 cd WanderCall-Video-Meet
+```
 
 ### 2. Backend Setup
 Navigate to the backend folder and install dependencies.
