@@ -87,13 +87,25 @@ export default function VideoMeetComponent() {
         }
     }, [])
 
-    let getDislayMedia = () => {
+   let getDislayMedia = () => {
         if (screen) {
+            
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
                     .then((stream) => { })
-                    .catch((e) => console.log(e))
+                    .catch((e) => {
+                        console.log(e);
+                        setScreen(false);
+                    })
+            }
+        } else {
+            
+            try {
+                let tracks = localVideoref.current.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+            } catch (e) {
+                console.log(e);
             }
         }
     }
