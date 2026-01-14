@@ -2,6 +2,8 @@
 
 A robust full-stack video conferencing application built with the MERN stack. WanderCall facilitates low-latency, real-time video and audio communication using WebRTC peer-to-peer architecture, supported by a secure Node.js backend.
 
+### 🔴 **[Live Demo](https://wandercall-backend.onrender.com)** *(Click the link above to test the application)*
+
 ## 🚀 Key Features
 
 -   **Real-time Video & Audio:** High-quality, low-latency streaming using WebRTC.
