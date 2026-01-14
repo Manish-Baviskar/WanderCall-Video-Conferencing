@@ -91,29 +91,25 @@ export default function VideoMeetComponent() {
     //  FIX 1: UPDATED SCREEN SHARE LOGIC (Auto-Stop & Restart Camera)
     // ----------------------------------------------------
     let getDislayMedia = () => {
-        // CASE 1: START SHARING
         if (screen) {
+            // ... (Start logic) ...
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
                     .then((stream) => { })
                     .catch((e) => {
                         console.log(e);
-                        setScreen(false); // Reset button if cancelled
+                        setScreen(false); 
                     })
             }
-        } 
-        // CASE 2: STOP SHARING
-        else {
-            // Stop the screen tracks manually
+        } else {
+            // ... (Stop logic) ...
             if (window.localStream) {
                 let tracks = window.localStream.getTracks();
                 tracks.forEach(track => track.stop());
             }
-
-            // Immediately restart the camera
             setVideo(true); 
-            getUserMedia(); 
+            getUserMedia(); // This triggers getUserMediaSuccess, which now swaps the tracks!
         }
     }
 
@@ -170,7 +166,18 @@ export default function VideoMeetComponent() {
         for (let id in connections) {
             if (id === socketIdRef.current) continue
 
-            connections[id].addStream(window.localStream)
+            // -----------------------------------------------------------
+            // THE FIX: Replace the track instead of just adding a new stream
+            // -----------------------------------------------------------
+            let videoTrack = stream.getVideoTracks()[0];
+            let sender = connections[id].getSenders().find(s => s.track.kind === videoTrack.kind);
+            
+            if (sender) {
+                sender.replaceTrack(videoTrack);
+            } else {
+                connections[id].addStream(window.localStream);
+            }
+            // -----------------------------------------------------------
 
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
@@ -206,7 +213,6 @@ export default function VideoMeetComponent() {
             }
         })
     }
-
     // ----------------------------------------------------
     //  FIX 2: ROBUST GETUSERMEDIA
     // ----------------------------------------------------
@@ -228,7 +234,18 @@ export default function VideoMeetComponent() {
         for (let id in connections) {
             if (id === socketIdRef.current) continue
 
-            connections[id].addStream(window.localStream)
+            // -----------------------------------------------------------
+            // THE FIX: Swap Camera Track -> Screen Track
+            // -----------------------------------------------------------
+            let videoTrack = stream.getVideoTracks()[0];
+            let sender = connections[id].getSenders().find(s => s.track.kind === videoTrack.kind);
+            
+            if (sender) {
+                sender.replaceTrack(videoTrack);
+            } else {
+                connections[id].addStream(window.localStream);
+            }
+            // -----------------------------------------------------------
 
             connections[id].createOffer().then((description) => {
                 connections[id].setLocalDescription(description)
