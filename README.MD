@@ -62,7 +62,7 @@ root
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/Manish-Baviskar/WanderCall-Video-Meet.git](https://github.com/Manish-Baviskar/WanderCall-Video-Meet.git)
+git clone https://github.com/Manish-Baviskar/WanderCall-Video-Meet.git
 cd WanderCall-Video-Meet
 ```
 
