@@ -88,26 +88,27 @@ export default function VideoMeetComponent() {
     }, [])
 
    let getDislayMedia = () => {
-        // Case 1: Start Sharing
+        // CASE 1: START SCREEN SHARE
         if (screen) {
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
                     .catch((e) => {
                         console.log(e);
-                        setScreen(false); // Reset button if user cancels
+                        setScreen(false); // Reset button if cancelled
                     });
             }
         } 
-        // Case 2: Stop Sharing
+        // CASE 2: STOP SCREEN SHARE
         else {
-            // STOP the tracks directly from the global stream variable
+            // 1. Stop the screen share tracks so the blue browser bar disappears
             if (window.localStream) {
-                window.localStream.getTracks().forEach(track => track.stop());
+                let tracks = window.localStream.getTracks();
+                tracks.forEach(track => track.stop());
             }
-            
-            // Force the camera to restart immediately
-            setScreen(false);
+
+            // 2. Restart the Webcam immediately
+            setVideo(true); // Ensure UI says video is "On"
             getUserMedia(); 
         }
     }
@@ -203,12 +204,12 @@ export default function VideoMeetComponent() {
     }
 
     let getUserMedia = () => {
-        if ((video && videoAvailable) || (audio && audioAvailable)) {
-            navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-                .then(getUserMediaSuccess)
-                .then((stream) => { })
-                .catch((e) => console.log(e))
-        } 
+        // Force request for camera and mic
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+                getUserMediaSuccess(stream);
+            })
+            .catch((e) => console.log("Failed to get camera:", e));
     }
 
     let getDislayMediaSuccess = (stream) => {
@@ -370,31 +371,29 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        const newVideoState = !video; // What we want the state to be
+        // Calculate what the NEW state should be
+        const newVideoState = !video; 
         setVideo(newVideoState);
-        
-        // If we are turning Video ON
-        if (newVideoState === true) {
-            // Check if we actually have a valid video track
-            const hasVideoTrack = window.localStream && 
-                                  window.localStream.getVideoTracks().length > 0 && 
-                                  window.localStream.getVideoTracks()[0].readyState === 'live';
 
-            if (!hasVideoTrack) {
-                // No video track found? We must request the camera again!
-                getUserMedia();
-            } else {
-                // Video track exists, just enable it
-                window.localStream.getVideoTracks()[0].enabled = true;
+        // OPTION A: Turning Video OFF
+        if (newVideoState === false) {
+            if (window.localStream && window.localStream.getVideoTracks().length > 0) {
+                window.localStream.getVideoTracks()[0].enabled = false;
             }
         } 
-        // If we are turning Video OFF
+        // OPTION B: Turning Video ON
         else {
-            if (window.localStream) {
-                const videoTrack = window.localStream.getVideoTracks()[0];
-                if (videoTrack) {
-                    videoTrack.enabled = false;
-                }
+            // Check if we have a valid stream
+            const hasLiveVideo = window.localStream && 
+                                 window.localStream.getVideoTracks().length > 0 && 
+                                 window.localStream.getVideoTracks()[0].readyState === 'live';
+
+            if (hasLiveVideo) {
+                // We have a stream, just unmute it
+                window.localStream.getVideoTracks()[0].enabled = true;
+            } else {
+                // Stream is dead or missing -> RESTART CAMERA
+                getUserMedia();
             }
         }
     }
