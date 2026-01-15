@@ -200,8 +200,8 @@ function HomeComponent() {
 
             {/* BACKGROUND PATTERNS (Restored!) */}
             <svg className={`${styles.pattern} ${styles.patternTop}`} viewBox="0 0 400 400" fill="none">
-                <path d="M10 100 C 100 10, 200 190, 390 100" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
-                <path d="M10 140 C 100 50, 200 230, 390 140" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none" opacity="0.5"/>
+                <path d="M-50 100 Q 150 50, 350 200" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+                <path d="M-50 150 Q 150 100, 350 250" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none" opacity="0.5"/>
             </svg>
 
             <svg className={`${styles.pattern} ${styles.patternBottom}`} width="500" height="300" viewBox="0 0 500 300" fill="none">
