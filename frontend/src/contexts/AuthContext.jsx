@@ -60,12 +60,14 @@ export const AuthProvider = ({ children }) => {
 
     const getHistoryOfUser = async () => {
         try {
-            let request = await client.post("/get_all_activity", {
-            token: localStorage.getItem("token")
-        });
-        return request.data;
-        } catch
-         (err) {
+            // UPDATED: Use GET request with 'params'
+            let request = await client.get("/get_all_activity", {
+                params: {
+                    token: localStorage.getItem("token")
+                }
+            });
+            return request.data;
+        } catch (err) {
             throw err;
         }
     }

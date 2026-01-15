@@ -74,19 +74,27 @@ const register = async (req, res) => {
 }
 
 const getUserHistory = async (req, res) => {
-    
-    const { token } = req.body;
+    // Note: GET requests usually send data in 'query', not 'body'
+    const { token } = req.query; 
 
     try {
-        const user = await User.findOne({ token: token });
-        
-        
+        const user = await User.findOne({ token: token })
+            .populate({
+                path: 'history',
+                populate: {
+                    path: 'attendees',
+                    select: 'name username' // Only fetch safe data
+                }
+            });
+
         if (!user) {
-            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found or invalid token" });
+            return res.status(404).json({ message: "User not found or invalid token" });
         }
 
-        const meetings = await Meeting.find({ user_id: user.username })
-        res.json(meetings)
+        // Return the populated history (meetings + attendee info)
+        // Reverse it so the newest meetings show up first
+        res.json(user.history.reverse());
+        
     } catch (e) {
         res.json({ message: `Something went wrong ${e}` })
     }
@@ -97,22 +105,38 @@ const addToHistory = async (req, res) => {
 
     try {
         const user = await User.findOne({ token: token });
-        
-        
+
         if (!user) {
-            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+            return res.status(404).json({ message: "User not found" });
         }
 
-        const newMeeting = new Meeting({
-            user_id: user.username,
-            meetingCode: meeting_code
-        })
+        // 1. Check if this meeting already exists in the database
+        let meeting = await Meeting.findOne({ meetingCode: meeting_code });
 
-        await newMeeting.save();
+        // 2. If NOT, create a brand new meeting
+        if (!meeting) {
+            meeting = new Meeting({
+                meetingCode: meeting_code,
+                attendees: []
+            });
+        }
 
-        res.status(httpStatus.CREATED).json({ message: "Added code to history" })
+        // 3. Add this user to the meeting's "Attendee List" (if not already there)
+        if (!meeting.attendees.includes(user._id)) {
+            meeting.attendees.push(user._id);
+            await meeting.save();
+        }
+
+        // 4. Add this meeting to the User's personal "History" 
+        // ($addToSet ensures we don't duplicate the same meeting ID)
+        await User.findByIdAndUpdate(user._id, { 
+            $addToSet: { history: meeting._id } 
+        });
+
+        res.status(201).json({ message: "Added to history" });
+
     } catch (e) {
-        res.json({ message: `Something went wrong ${e}` })
+        res.status(500).json({ message: `Something went wrong ${e}` });
     }
 }
 
