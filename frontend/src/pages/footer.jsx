@@ -24,7 +24,7 @@ export default function Footer() {
             <li><a href="/home">Home</a></li>
             <li><a href="/history">History</a></li>
             <li><a href="#">About Us</a></li>
-            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="https://github.com/Manish-Baviskar/WanderCall-Video-Conferencing/blob/main/LICENSE">Privacy Policy</a></li>
           </ul>
         </div>
 
@@ -32,10 +32,10 @@ export default function Footer() {
         <div className="footer-section social">
           <h3>Follow Us</h3>
           <div className="social-icons">
-            <a href="#" className="icon"><GitHubIcon /></a>
-            <a href="#" className="icon"><LinkedInIcon /></a>
-            <a href="#" className="icon"><TwitterIcon /></a>
-            <a href="#" className="icon"><InstagramIcon /></a>
+            <a href="https://github.com/Manish-Baviskar" className="icon"><GitHubIcon /></a>
+            <a href="https://www.linkedin.com/in/manishbaviskar/" className="icon"><LinkedInIcon /></a>
+            <a href="https://x.com/_manish_23" className="icon"><TwitterIcon /></a>
+            <a href="https://www.instagram.com/manishbaviskar1/" className="icon"><InstagramIcon /></a>
           </div>
         </div>
       </div>

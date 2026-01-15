@@ -1,6 +1,8 @@
 /* landing.module.css */
 
 .landingWrapper {
+    height: 100vh; /* Locked to screen height */
+    width: 100vw;
     min-height: 100vh;
     /* EXACT SAME GRADIENT AS HOME PAGE */
     background: radial-gradient(circle at top left, #1a1a1a, #000000);
@@ -165,11 +167,13 @@
 
 /* FOOTER */
 .footer {
-    padding: 20px;
+    position: absolute; /* Lock to bottom */
+    bottom: 10px;
+    width: 100%;
     text-align: center;
-    color: #555;
-    font-size: 0.9rem;
-    z-index: 10;
+    color: #888;
+    font-size: 0.8rem;
+    z-index: 20;
 }
 
 /* RESPONSIVE */
