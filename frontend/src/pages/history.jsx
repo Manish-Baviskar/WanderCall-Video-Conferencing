@@ -12,6 +12,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import styles from '../styles/history.module.css';
 
 export default function History() {
     const { getHistoryOfUser } = useContext(AuthContext);
@@ -75,7 +76,7 @@ export default function History() {
             </Box>
 
             {/* List */}
-            <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ p: { xs: 2, md: 5 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {meetings.length === 0 ? (
                     <Typography style={{ color: 'gray', textAlign: 'center' }}>No history found.</Typography>
                 ) : (
