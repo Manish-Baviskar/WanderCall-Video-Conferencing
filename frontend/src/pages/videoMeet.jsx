@@ -67,34 +67,29 @@ export default function VideoMeetComponent() {
     try {
         if (localStorage.getItem("token")) {
             
-            // ROBUST URL EXTRACTION
-            // Handles "/room", "/room/", and "/path/to/room"
+            // 1. Get Clean Code
+            // This handles "/dqdx3p" OR "/dqdx3p/" OR "/room/dqdx3p"
             const segments = window.location.pathname.split('/').filter(Boolean);
-            const cleanCode = segments.pop(); 
+            const cleanCode = segments.pop();
 
-            if (!cleanCode) {
-                console.log("Could not extract meeting code");
-                return;
-            }
+            console.log("ATTEMPTING TO LEAVE:", cleanCode); // <--- Watch this log!
 
-            console.log("LEAVING MEETING:", cleanCode); 
+            if (!cleanCode) return; 
 
             const data = {
                 token: localStorage.getItem("token"),
-                meeting_code: cleanCode
+                meeting_code: cleanCode 
             };
 
             await fetch(`${server_url}/api/v1/users/update_leave_time`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
                 keepalive: true 
             });
         }
     } catch (e) {
-        console.log("Error marking leave time:", e);
+        console.log("Frontend Error:", e);
     }
 }
 

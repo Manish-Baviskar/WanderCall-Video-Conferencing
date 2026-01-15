@@ -135,43 +135,51 @@ const addToHistory = async (req, res) => {
 }
 
 const updateLeaveTime = async (req, res) => {
-    // 1. Log the incoming request (Helps debugging in Render Logs)
-    const { token, meeting_code } = req.body;
-    console.log("updateLeaveTime called with:", { token, meeting_code });
-
     try {
-        // 2. Validate Input
+        const { token, meeting_code } = req.body;
+        
+        console.log("--- LEAVE REQUEST RECEIVED ---");
+        console.log("Token:", token ? "Exists" : "Missing");
+        console.log("Meeting Code Raw:", meeting_code);
+
+        // 1. Validate Input
         if (!token || !meeting_code) {
-            return res.status(400).json({ message: "Token and Meeting Code are required" });
+            console.log("Error: Missing Data");
+            return res.status(400).json({ message: "Missing token or meeting_code" });
         }
 
+        // 2. Find User
         const user = await User.findOne({ token: token });
         if (!user) {
+            console.log("Error: User Not Found for token");
             return res.status(404).json({ message: "User not found" });
         }
 
-        // 3. Clean the Code (Handle full URL or just code)
+        // 3. Clean Code & Find Meeting
         const cleanMeetingCode = meeting_code.includes("/") ? meeting_code.split("/").pop() : meeting_code;
+        console.log("Clean Meeting Code:", cleanMeetingCode);
 
         const meeting = await Meeting.findOne({ meetingCode: cleanMeetingCode });
         if (!meeting) {
+            console.log("Error: Meeting Not Found");
             return res.status(404).json({ message: "Meeting not found" });
         }
 
-        // 4. Find Attendee (Safety Check added)
+        // 4. Update Attendee
         const attendeeIndex = meeting.attendees.findIndex(a => a.user.toString() === user._id.toString());
         
         if (attendeeIndex !== -1) {
             meeting.attendees[attendeeIndex].leaveTime = new Date();
             await meeting.save();
-            console.log("Leave time saved for user:", user.username);
+            console.log("SUCCESS: Leave time updated for", user.username);
             return res.status(200).json({ message: "Leave time updated" });
         } else {
-            return res.status(404).json({ message: "User not found in this meeting's attendee list" });
+            console.log("Error: User was not in attendee list");
+            return res.status(404).json({ message: "User not participant in this meeting" });
         }
 
     } catch (e) {
-        console.error("CRITICAL ERROR in updateLeaveTime:", e);
+        console.error("CRITICAL SERVER ERROR:", e); // <--- This will show in Render Logs
         return res.status(500).json({ message: `Server Error: ${e.message}` });
     }
 }
