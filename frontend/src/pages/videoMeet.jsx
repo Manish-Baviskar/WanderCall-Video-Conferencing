@@ -44,6 +44,7 @@ useEffect(() => {
     let socketIdRef = useRef();
 
     let localVideoref = useRef();
+    let [isConnecting, setIsConnecting] = useState(false);
 
     let [videoAvailable, setVideoAvailable] = useState(true);
 
@@ -357,87 +358,92 @@ useEffect(() => {
     }
 
     let connectToSocketServer = () => {
-        
-        socketRef.current = io.connect(server_url, { secure: false, forceNew: true })
+    // --- CRITICAL FIX: Disconnect existing socket if it exists ---
+    if (socketRef.current) {
+        console.log("Cleaning up previous socket connection...");
+        socketRef.current.disconnect();
+    }
+    // -------------------------------------------------------------
 
-        socketRef.current.on('signal', gotMessageFromServer)
+    socketRef.current = io.connect(server_url, { secure: false, forceNew: true })
 
-        socketRef.current.on('connect', () => {
-            socketRef.current.emit('join-call', window.location.href)
-            socketIdRef.current = socketRef.current.id
+    socketRef.current.on('signal', gotMessageFromServer)
 
-            socketRef.current.on('chat-message', addMessage)
+    socketRef.current.on('connect', () => {
+        socketRef.current.emit('join-call', window.location.href)
+        socketIdRef.current = socketRef.current.id
 
-            socketRef.current.on('user-left', (id) => {
-                setVideos((videos) => videos.filter((video) => video.socketId !== id))
-            })
+        socketRef.current.on('chat-message', addMessage)
 
-            socketRef.current.on('user-joined', (id, clients) => {
-                clients.forEach((socketListId) => {
+        socketRef.current.on('user-left', (id) => {
+            setVideos((videos) => videos.filter((video) => video.socketId !== id))
+        })
 
-                    connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
-                    
-                    connections[socketListId].onicecandidate = function (event) {
-                        if (event.candidate != null) {
-                            socketRef.current.emit('signal', socketListId, JSON.stringify({ 'ice': event.candidate }))
-                        }
-                    }
-
-                    connections[socketListId].onaddstream = (event) => {
-                        let videoExists = videoRef.current.find(video => video.socketId === socketListId);
-
-                        if (videoExists) {
-                            setVideos(videos => {
-                                const updatedVideos = videos.map(video =>
-                                    video.socketId === socketListId ? { ...video, stream: event.stream } : video
-                                );
-                                videoRef.current = updatedVideos;
-                                return updatedVideos;
-                            });
-                        } else {
-                            let newVideo = {
-                                socketId: socketListId,
-                                stream: event.stream,
-                                autoplay: true,
-                                playsinline: true
-                            };
-                            setVideos(videos => {
-                                const updatedVideos = [...videos, newVideo];
-                                videoRef.current = updatedVideos;
-                                return updatedVideos;
-                            });
-                        }
-                    };
-
-                    if (window.localStream !== undefined && window.localStream !== null) {
-                        connections[socketListId].addStream(window.localStream)
-                    } else {
-                        let blackSilence = (...args) => new MediaStream([black(...args), silence()])
-                        window.localStream = blackSilence()
-                        connections[socketListId].addStream(window.localStream)
-                    }
-                })
-
-                if (id === socketIdRef.current) {
-                    for (let id2 in connections) {
-                        if (id2 === socketIdRef.current) continue
-
-                        try {
-                            connections[id2].addStream(window.localStream)
-                        } catch (e) { }
-
-                        connections[id2].createOffer().then((description) => {
-                            connections[id2].setLocalDescription(description)
-                                .then(() => {
-                                    socketRef.current.emit('signal', id2, JSON.stringify({ 'sdp': connections[id2].localDescription }))
-                                })
-                                .catch(e => console.log(e))
-                        })
+        socketRef.current.on('user-joined', (id, clients) => {
+            clients.forEach((socketListId) => {
+                connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
+                
+                connections[socketListId].onicecandidate = function (event) {
+                    if (event.candidate != null) {
+                        socketRef.current.emit('signal', socketListId, JSON.stringify({ 'ice': event.candidate }))
                     }
                 }
+
+                connections[socketListId].onaddstream = (event) => {
+                    let videoExists = videoRef.current.find(video => video.socketId === socketListId);
+
+                    if (videoExists) {
+                        setVideos(videos => {
+                            const updatedVideos = videos.map(video =>
+                                video.socketId === socketListId ? { ...video, stream: event.stream } : video
+                            );
+                            videoRef.current = updatedVideos;
+                            return updatedVideos;
+                        });
+                    } else {
+                        let newVideo = {
+                            socketId: socketListId,
+                            stream: event.stream,
+                            autoplay: true,
+                            playsinline: true
+                        };
+                        setVideos(videos => {
+                            const updatedVideos = [...videos, newVideo];
+                            videoRef.current = updatedVideos;
+                            return updatedVideos;
+                        });
+                    }
+                };
+
+                if (window.localStream !== undefined && window.localStream !== null) {
+                    connections[socketListId].addStream(window.localStream)
+                } else {
+                    let blackSilence = (...args) => new MediaStream([black(...args), silence()])
+                    window.localStream = blackSilence()
+                    connections[socketListId].addStream(window.localStream)
+                }
             })
+
+            if (id === socketIdRef.current) {
+                for (let id2 in connections) {
+                    if (id2 === socketIdRef.current) continue
+
+                    try {
+                        connections[id2].addStream(window.localStream)
+                    } catch (e) { }
+
+                    connections[id2].createOffer().then((description) => {
+                        connections[id2].setLocalDescription(description)
+                            .then(() => {
+                                socketRef.current.emit('signal', id2, JSON.stringify({ 'sdp': connections[id2].localDescription }))
+                            })
+                            .catch(e => console.log(e))
+                    })
+                }
+            }
         })
-    }
+    })
+}
 
     let silence = () => {
         let ctx = new AudioContext()
@@ -546,27 +552,29 @@ useEffect(() => {
     }
 
     let connect = () => {
-        setAskForUsername(false);
-        getMedia();
+    // 1. Prevent double clicks
+    if (isConnecting) return;
+    setIsConnecting(true);
 
-        if(localStorage.getItem("token")) {
-            try {
-                
-                addToUserHistory(window.location.href) 
-                    .then(response => {
-                        console.log("Meeting added to history:", response);
-                    })
-                    .catch(err => {
-                        console.log("Failed to add history:", err);
-                    });
-            } catch (e) {
-                console.error(e);
-            }
-        } else {
-            console.log("Guest user joined - History not saved.");
+    setAskForUsername(false);
+    getMedia();
+
+    if(localStorage.getItem("token")) {
+        try {
+            addToUserHistory(window.location.href)
+                .then(response => {
+                    console.log("Meeting added to history:", response);
+                })
+                .catch(err => {
+                    console.log("Failed to add history:", err);
+                });
+        } catch (e) {
+            console.error(e);
         }
-
+    } else {
+        console.log("Guest user joined - History not saved.");
     }
+}
 
     // ... all your existing logic above ...
 
@@ -621,10 +629,14 @@ useEffect(() => {
                                     "& .MuiInputLabel-root.Mui-focused": { color: "#ff9800" }
                                 }}
                             />
-                            <Button variant="contained" onClick={connect} className={`${styles.primaryBtn} ${styles.animateBtn}`} 
-                                style={{ background: '#ff9800', color: 'black', fontWeight: 'bold', padding: '15px 30px', borderRadius: '12px' }}>
-                                Connect
-                            </Button>
+                            <Button 
+    variant="contained" 
+    onClick={connect}
+    disabled={isConnecting} // <--- Add this line
+    className={`${styles.primaryBtn} ${styles.animateBtn}`} 
+    style={{ background: '#ff9800', color: 'black', fontWeight: 'bold', padding: '15px 30px', borderRadius: '12px' }}>
+    {isConnecting ? "Joining..." : "Connect"} {/* <--- Optional: Change text */}
+</Button>
                         </div>
                         
                         <div className={styles.videoPreviewContainer} style={{ border: '2px solid #ff9800', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 0 30px rgba(255,152,0,0.2)' }}>
