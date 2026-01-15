@@ -1,190 +1,182 @@
-/* homeComponent.module.css */
-
-.homeWrapper { 
-  background-color: #121212;
-  color: white;
-  min-height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+/* MAIN WRAPPER: Black Background */
+.homeWrapper {
+    background-color: #000000; /* Pure Black */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    color: white;
 }
 
+/* NAVBAR */
 .homeNav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 60px;
-  z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: transparent; /* Seamless blend */
 }
 
 .navHeader h2 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: 1px;
+    color: #ff9800; /* Orange Logo */
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-.homeNavlist { 
-  background-color: #ffa500;
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  padding: 10px 30px;
-  border-radius: 50px;
-}
-
-.homeNavlist p {
-  color: black;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  margin: 0;
-}
-
-.logoutBtn { 
-  background-color: black;
-  color: white;
-  padding: 8px 25px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.logoutBtn:hover {
-  transform: scale(1.05);
-}
-
-.homeMainContainer {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 60px;
-  position: relative;
-  z-index: 10;
-}
-
-.textSection { 
-  flex: 1;
-  max-width: 650px;
-}
-
-.textSection h1 {
-  font-size: 4.5rem;
-  line-height: 1.1;
-  font-weight: 800;
-  margin-bottom: 25px;
-}
-
-.accentText { 
-  color: #ffa500;
-}
-
-.textSection p {
-  font-size: 1.1rem;
-  color: #cccccc;
-  line-height: 1.6;
-  max-width: 480px;
-  margin-bottom: 40px;
-}
-
-.inputGroup { 
+/* ACCOUNT PILL (Orange) */
+.accountPill {
     display: flex;
-    gap: 15px;
     align-items: center;
-}
-
-.codeInput { 
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #333;
-    padding: 18px 25px;
+    gap: 10px;
+    background-color: #ff9800;
+    padding: 5px 5px 5px 15px;
     border-radius: 50px;
-    color: white;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-    outline: none;
-    width: 250px;
-    transition: all 0.3s;
-}
-
-.codeInput:focus {
-    border-color: #ffa500;
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.joinBtn { 
-  background-color: #ffa500;
-  color: black;
-  padding: 18px 45px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.joinBtn:hover {
-  transform: scale(1.05);
-}
-
-.imageSection { 
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.imageSection img {
-  height: 80vh; 
-  width: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 0 30px rgba(0,0,0,0.5));
-}
-
-.pattern {
-  position: absolute;
-  z-index: 1; 
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.patternTop { top: -50px; left: 30%; }
-.patternBottom { bottom: -50px; left: 20%; }
-
-
-@media screen and (max-width: 900px) {
-  .homeMainContainer { flex-direction: column; text-align: center; padding-top: 40px; }
-  .inputGroup { flex-direction: column; width: 100%; }
-  .codeInput, .joinBtn { width: 100%; }
-  .homeNav { flex-direction: column; gap: 20px; }
-  .imageSection img { width: 80%; height: auto; margin-top: 40px; }
-  .textSection h1 { font-size: 3rem; }
-}
-
-.generateLink {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #cccccc;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: 0.3s;
 }
 
-.generateLink span {
-    color: #ffa500; 
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 4px;
+.accountPill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.4); /* Glow effect */
 }
 
-.generateLink:hover span {
+.userName {
+    color: black; /* Black text on orange pill */
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* MAIN CONTENT: Centered */
+.mainContentContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* THE CARD: Dark Grey */
+.card {
+    background-color: #111; /* Dark Grey Card */
+    width: 100%;
+    max-width: 850px;
+    border-radius: 20px;
+    border: 1px solid #333; /* Subtle border */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    display: flex;
+    overflow: hidden;
+    padding: 50px;
+    gap: 50px;
+}
+
+/* LEFT SIDE */
+.cardActions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cardActions h1 {
+    color: white;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.accentText {
+    color: #ff9800;
+}
+
+.cardActions p {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+/* JOIN SECTION */
+.joinSection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Input Field - Dark Mode Styling */
+.inputField .MuiOutlinedInput-root {
+    border-radius: 8px;
+    background-color: #222; /* Dark input background */
     color: white;
 }
+.inputField .MuiOutlinedInput-notchedOutline {
+    border-color: #444;
+}
+.inputField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #ff9800;
+}
+.inputField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #ff9800;
+}
 
-.codeInput::placeholder {
-    color: #888888; 
-    opacity: 1;
+/* Join Button */
+.joinBtn.MuiButton-root {
+    background-color: #ff9800;
+    color: black;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px 30px;
+    text-transform: none;
+    font-size: 1rem;
+}
+.joinBtn.MuiButton-root:hover {
+    background-color: #e68a00;
+}
+
+/* Create Button */
+.createBtn.MuiButton-root {
+    background-color: #222;
+    color: white;
+    border: 1px solid #333;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px;
+    text-transform: none;
+    font-size: 1rem;
+}
+.createBtn.MuiButton-root:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+/* RIGHT SIDE: Logo */
+.cardImageSection {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid #222; /* Divider line */
+}
+
+/* FOOTER */
+.simpleFooter {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-size: 0.85rem;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .card {
+        flex-direction: column-reverse;
+        padding: 30px;
+        text-align: center;
+    }
+    .cardImageSection {
+        border-left: none;
+        border-bottom: 1px solid #222;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    .joinSection {
+        flex-direction: column;
+    }
 }

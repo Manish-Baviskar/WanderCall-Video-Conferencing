@@ -39,7 +39,7 @@ export default function LandingPage(){
                 <div role='button' className="get-started-btn anim-element anim-delay-3"><Link to={"/auth"}>Get Started</Link></div>
             </div>
             <div>
-                <img src='/mobile.webp' className="anim-element anim-delay-4"></img>
+                <img src='/mobile.svg' className="anim-element anim-delay-4"></img>
             </div>
         </div>
 
