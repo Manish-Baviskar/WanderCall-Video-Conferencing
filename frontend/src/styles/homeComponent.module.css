@@ -18,10 +18,11 @@
 }
 
 .patternTop {
-    top: 50%; 
-    left: 50%;
-    transform: translate(-100%, -100%); /* Moves it to start from center */
-    width: 600px;
+    top: 40%;         /* Vertically centered */
+    left: 0;
+    width: 400px;     /* Wide enough to reach the card */
+    height: 400px;
+    transform: translate(-40%, -50%) rotate(10deg);
     margin-top: -100px; /* Fine tune position upwards */
     margin-left: -100px; /* Fine tune position leftwards */
 }
