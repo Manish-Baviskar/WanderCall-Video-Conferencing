@@ -493,11 +493,11 @@ export default function VideoMeetComponent() {
     } catch (e) { }
 
     // Redirect immediately - the 'keepalive' request above continues in background
-    if (localStorage.getItem("token")) {
-        window.location.href = "/home";
-    } else {
-        window.location.href = "/";
-    }
+    // if (localStorage.getItem("token")) {
+    //     window.location.href = "/home";
+    // } else {
+    //     window.location.href = "/";
+    // }
 }
 
 
