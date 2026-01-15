@@ -66,16 +66,21 @@ export default function VideoMeetComponent() {
     const markLeave = async () => {
         try {
             if(localStorage.getItem("token")) {
-                let data = {
+                const data = {
                     token: localStorage.getItem("token"),
                     meeting_code: window.location.href
                 };
-
-                // Create a JSON Blob (Required for sendBeacon to send JSON)
-                const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
                 
-                // This sends the data reliably in the background
-                navigator.sendBeacon(`${server_url}/api/v1/users/update_leave_time`, blob);
+                // Using native fetch with 'keepalive'
+                // This forces the request to finish even if the tab closes
+                await fetch(`${server_url}/api/v1/users/update_leave_time`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    keepalive: true // <--- THE MAGIC FIX
+                });
             }
         } catch (e) {
             console.log("Error marking leave time:", e);
@@ -474,23 +479,26 @@ export default function VideoMeetComponent() {
         setScreen(!screen);
     }
 
-   // Make this function ASYNC
-    let handleEndCall = async () => {
+   
+   let handleEndCall = () => {
         try {
             let tracks = localVideoref.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
 
-        // Trigger the leave logic
-        await markLeave();
+        // Trigger the database update
+        markLeave();
 
-        // Redirect
-        if (localStorage.getItem("token")) {
-            window.location.href = "/home";
-        } else {
-            window.location.href = "/";
-        }
-    }
+        // Wait 500ms before redirecting
+        setTimeout(() => {
+            if (localStorage.getItem("token")) {
+                window.location.href = "/home";
+            } else {
+                window.location.href = "/";
+            }
+        }, 500); // <--- 0.5 Second Delay
+    } 
+
 
     let openChat = () => {
         setModal(true);
