@@ -161,4 +161,4 @@ const updateLeaveTime = async (req, res) => {
 }
 
 
-export { login, register, getUserHistory, addToHistory }
+export { login, register, getUserHistory, addToHistory, updateLeaveTime }
