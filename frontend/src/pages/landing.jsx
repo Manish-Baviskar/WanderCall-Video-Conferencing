@@ -94,16 +94,7 @@ export default function LandingPage() {
       </div>
 
       {/* 4. FOOTER */}
-      <div className={styles.footer}>
-        <p>&copy; 2026 WanderCall. All rights reserved.</p>
-        <p style={{ marginTop: "5px" }}>
-          Made with{" "}
-          <span style={{ color: "#ff9800", fontSize: "1.2rem" }}>♥</span> by{" "}
-          <span style={{ color: "#fff", fontWeight: "bold" }}>
-            Manish Baviskar
-          </span>
-        </p>
-      </div>
+      <Footer />
     </div>
   );
 }

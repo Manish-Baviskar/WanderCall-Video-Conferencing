@@ -1,78 +1,89 @@
-/* src/pages/Footer.css */
+/* src/pages/footer.css */
+
 .footer {
-    background-color: #111; /* Slightly darker than body */
-    color: white;
+    background-color: #000000; /* Solid Black */
+    color: #fff;
     padding: 40px 20px 20px;
-    border-top: 1px solid #333;
-    margin-top: 50px;
+    font-family: 'Poppins', sans-serif;
+    border-top: 1px solid rgba(255, 152, 0, 0.2); /* Subtle Orange Border */
+    
+    /* CRITICAL: Ensure it sits on top of waves */
+    position: relative;
+    z-index: 50; 
+    margin-top: auto; /* Pushes to bottom */
 }
 
 .footer-content {
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
+    justify-content: space-around;
     max-width: 1200px;
     margin: 0 auto;
+    padding-bottom: 20px;
 }
 
 .footer-section {
     flex: 1;
     min-width: 250px;
-    margin-bottom: 20px;
-    padding: 0 15px;
+    margin: 10px;
 }
 
-.footer-section h3 {
-    color: #ff9800; /* Your orange accent */
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+/* Brand Section */
+.brand h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
-
-.footer-section p {
-    color: #ccc;
-    font-size: 0.9rem;
+.brand p {
+    color: #aaa;
     line-height: 1.6;
+    font-size: 0.9rem;
 }
 
+/* Links Section */
+.links h3 {
+    color: #ff9800; /* Orange Headers */
+    margin-bottom: 15px;
+}
 .links ul {
     list-style: none;
     padding: 0;
 }
-
 .links ul li {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
-
 .links ul li a {
-    color: white;
+    color: #ccc;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: 0.3s;
 }
-
 .links ul li a:hover {
     color: #ff9800;
+    padding-left: 5px; /* Slide effect */
 }
 
+/* Socials Section */
+.social h3 {
+    color: #ff9800;
+    margin-bottom: 15px;
+}
 .social-icons {
     display: flex;
     gap: 15px;
 }
-
-.icon {
+.social-icons .icon {
     color: white;
-    transition: transform 0.3s, color 0.3s;
+    transition: 0.3s;
 }
-
-.icon:hover {
+.social-icons .icon:hover {
     color: #ff9800;
     transform: translateY(-3px);
 }
 
+/* Bottom Bar */
 .footer-bottom {
     text-align: center;
-    margin-top: 20px;
+    border-top: 1px solid #222;
     padding-top: 20px;
-    border-top: 1px solid #333;
-    font-size: 0.8rem;
-    color: #777;
+    color: #666;
+    font-size: 0.85rem;
 }
