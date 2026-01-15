@@ -67,20 +67,20 @@ export default function VideoMeetComponent() {
     try {
         if (localStorage.getItem("token")) {
             
-            // 1. CLEAN THE URL (Fixes the Host Bug)
-            // This removes any trailing slash (e.g. "url/" becomes "url") 
-            // so the backend always gets the correct code.
-            let currentUrl = window.location.href;
-            if (currentUrl.endsWith("/")) {
-                currentUrl = currentUrl.slice(0, -1);
-            }
+            // 1. Get the path (e.g., "/abc" or "/abc/")
+            let path = window.location.pathname;
+            
+            // 2. Remove trailing slash if it exists (CRITICAL STEP)
+            path = path.replace(/\/$/, ""); 
+            
+            // 3. Now getting the last part is 100% safe
+            const cleanCode = path.split("/").pop();
 
             const data = {
                 token: localStorage.getItem("token"),
-                meeting_code: currentUrl
+                meeting_code: cleanCode // Sends "7dlxnx" perfectly every time
             };
 
-            // 2. Send with keepalive (Fixes the "Laggy" feel)
             await fetch(`${server_url}/api/v1/users/update_leave_time`, {
                 method: 'POST',
                 headers: {
