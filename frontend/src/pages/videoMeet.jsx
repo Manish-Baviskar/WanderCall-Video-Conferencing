@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import io from "socket.io-client";
+import axios from 'axios';
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -60,6 +61,26 @@ export default function VideoMeetComponent() {
     let [videos, setVideos] = useState([])
 
     const { addToUserHistory } = useContext(AuthContext);
+
+    const markLeave = async () => {
+        try {
+            if(localStorage.getItem("token")) {
+                await axios.post(`${server_url}/api/v1/users/update_leave_time`, {
+                    token: localStorage.getItem("token"),
+                    meeting_code: window.location.href
+                });
+            }
+        } catch (e) {
+            console.log("Error marking leave time:", e);
+        }
+    }
+
+    // 2. Trigger on Component Unmount (Closing tab or Back button)
+    useEffect(() => {
+        return () => {
+            markLeave();
+        }
+    }, [])
 
     
     useEffect(() => {
@@ -451,7 +472,15 @@ export default function VideoMeetComponent() {
             let tracks = localVideoref.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        window.location.href = "/"
+        
+        if (localStorage.getItem("token")) {
+            // 1. If User is Logged In
+            markLeave();             // Save the "Left At" time
+            window.location.href = "/home";  // Go to Dashboard
+        } else {
+            // 2. If Guest
+            window.location.href = "/";      // Go to Landing Page
+        }
     }
 
     let openChat = () => {

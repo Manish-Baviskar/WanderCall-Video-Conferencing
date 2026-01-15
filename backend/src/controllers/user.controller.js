@@ -74,29 +74,23 @@ const register = async (req, res) => {
 }
 
 const getUserHistory = async (req, res) => {
-    // Note: GET requests usually send data in 'query', not 'body'
-    const { token } = req.query; 
+    const { token } = req.query;
 
     try {
         const user = await User.findOne({ token: token })
             .populate({
                 path: 'history',
                 populate: {
-                    path: 'attendees',
-                    select: 'name username' // Only fetch safe data
+                    path: 'attendees.user', // Populate the nested user object
+                    select: 'name username'
                 }
             });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found or invalid token" });
-        }
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Return the populated history (meetings + attendee info)
-        // Reverse it so the newest meetings show up first
         res.json(user.history.reverse());
-        
     } catch (e) {
-        res.json({ message: `Something went wrong ${e}` })
+        res.status(500).json({ message: `Error: ${e}` });
     }
 }
 
@@ -105,20 +99,10 @@ const addToHistory = async (req, res) => {
 
     try {
         const user = await User.findOne({ token: token });
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+        const cleanMeetingCode = meeting_code.includes("/") ? meeting_code.split("/").pop() : meeting_code;
 
-        // --- NEW: SANITIZATION LOGIC ---
-        // If the code is a full URL (contains "/"), take only the last part.
-        // If it's already just a code (e.g., "abc"), it stays "abc".
-        const cleanMeetingCode = meeting_code.includes("/") 
-            ? meeting_code.split("/").pop() 
-            : meeting_code;
-        // -------------------------------
-
-        // Use 'cleanMeetingCode' everywhere below instead of 'meeting_code'
         let meeting = await Meeting.findOne({ meetingCode: cleanMeetingCode });
 
         if (!meeting) {
@@ -128,19 +112,51 @@ const addToHistory = async (req, res) => {
             });
         }
 
-        if (!meeting.attendees.includes(user._id)) {
-            meeting.attendees.push(user._id);
+        // --- UPDATED: Add User Object with Join Time ---
+        // Check if user is already in the list to prevent duplicates
+        const existingAttendee = meeting.attendees.find(a => a.user.toString() === user._id.toString());
+        
+        if (!existingAttendee) {
+            meeting.attendees.push({
+                user: user._id,
+                joinTime: new Date(),
+                leaveTime: null 
+            });
             await meeting.save();
         }
 
-        await User.findByIdAndUpdate(user._id, { 
-            $addToSet: { history: meeting._id } 
-        });
+        await User.findByIdAndUpdate(user._id, { $addToSet: { history: meeting._id } });
 
         res.status(201).json({ message: "Added to history" });
 
     } catch (e) {
-        res.status(500).json({ message: `Something went wrong ${e}` });
+        res.status(500).json({ message: `Error: ${e}` });
+    }
+}
+
+const updateLeaveTime = async (req, res) => {
+    const { token, meeting_code } = req.body;
+
+    try {
+        const user = await User.findOne({ token: token });
+        const cleanMeetingCode = meeting_code.includes("/") ? meeting_code.split("/").pop() : meeting_code;
+        
+        const meeting = await Meeting.findOne({ meetingCode: cleanMeetingCode });
+
+        if (meeting && user) {
+            // Find the specific attendee entry for this user
+            const attendeeIndex = meeting.attendees.findIndex(a => a.user.toString() === user._id.toString());
+            
+            if (attendeeIndex !== -1) {
+                meeting.attendees[attendeeIndex].leaveTime = new Date(); // Stamp the exit time
+                await meeting.save();
+                return res.status(200).json({ message: "Leave time updated" });
+            }
+        }
+        res.status(404).json({ message: "Meeting or User not found" });
+
+    } catch (e) {
+        res.status(500).json({ message: `Error: ${e}` });
     }
 }
 

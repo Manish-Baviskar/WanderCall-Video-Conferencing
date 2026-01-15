@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../contexts/AuthContext'
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import HomeIcon from '@mui/icons-material/Home';
 import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -14,140 +14,125 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 
 export default function History() {
-
     const { getHistoryOfUser } = useContext(AuthContext);
-    const [meetings, setMeetings] = useState([])
-    const routeTo = useNavigate();
+    const [meetings, setMeetings] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchHistory = async () => {
             try {
                 const historyData = await getHistoryOfUser();
-
-                // Robust data checking (Handles different backend response structures)
-                if (historyData.activity) {
-                    setMeetings(historyData.activity);
-                } else if (Array.isArray(historyData)) {
-                    setMeetings(historyData);
-                } else {
-                    setMeetings([]);
-                }
-
+                const data = historyData.activity || (Array.isArray(historyData) ? historyData : []);
+                setMeetings(data);
             } catch (e) {
                 console.log("Error fetching history:", e);
             }
         }
-
         fetchHistory();
-    }, [])
+    }, [getHistoryOfUser]);
 
-    let formatDate = (dateString) => {
+    // Helper: Format Date (e.g., 18/11/2025)
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
         const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0");
-        const year = date.getFullYear();
+        return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    }
 
-        const time = date.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+    // Helper: Format Time (e.g., 15:48:35)
+    const formatTime = (dateString) => {
+        if (!dateString) return "--:--";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString("en-US", { hour12: false });
+    }
 
-        return `${day}/${month}/${year} at ${time}`;
+    // Helper: Calculate Duration (e.g., "5 min 18 sec")
+    const calculateDuration = (start, end) => {
+        if (!start || !end) return "Ongoing / Unknown";
+        
+        const startTime = new Date(start);
+        const endTime = new Date(end);
+        const diffMs = endTime - startTime; // Difference in milliseconds
+
+        if (diffMs < 0) return "Error";
+
+        const minutes = Math.floor(diffMs / 60000);
+        const seconds = Math.floor((diffMs % 60000) / 1000);
+
+        return `${minutes} min ${seconds} sec`;
     }
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#0a0a23' }}> {/* Dark Background */}
+        <div style={{ minHeight: '100vh', backgroundColor: '#0a0a23', paddingBottom: '50px' }}>
             
             {/* Header */}
-            <Box sx={{ 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "space-between", 
-                p: 3, 
-                borderBottom: '1px solid #333' 
-            }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, p: 3, borderBottom: '1px solid #333', bgcolor: '#1a1a2e' }}>
+                <IconButton onClick={() => navigate("/home")} sx={{ color: 'white' }}>
+                     <ArrowBackIcon fontSize="large" />
+                </IconButton>
                 <Typography variant="h4" fontWeight="bold" sx={{ color: 'white' }}>
                     Meeting History
                 </Typography>
-                <IconButton onClick={() => routeTo("/home")}>
-                     <HomeIcon sx={{ color: 'white', fontSize: 40 }} />
-                </IconButton>
             </Box>
 
-            {/* List Container */}
+            {/* List */}
             <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                
                 {meetings.length === 0 ? (
-                    <Typography style={{ color: 'gray', textAlign: 'center', marginTop: '20px' }}>
-                        No meeting history found.
-                    </Typography>
+                    <Typography style={{ color: 'gray', textAlign: 'center' }}>No history found.</Typography>
                 ) : (
-                    meetings.map((e, i) => {
-                        return (
-                            <Paper key={i} elevation={3} sx={{ borderRadius: 2, overflow: 'hidden', bgcolor: '#1a1a2e' }}>
-                                <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
-                                    
-                                    {/* Visible Summary (Code + Date) */}
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}
-                                        aria-controls={`panel${i}-content`}
-                                        id={`panel${i}-header`}
-                                    >
-                                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-                                            <Box>
-                                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#4dabf5' }}>
-                                                    Code: {e.meetingCode}
-                                                </Typography>
-                                                <Typography variant="body2" sx={{ color: 'gray', mt: 1 }}>
-                                                    Joined on: {e.date ? formatDate(e.date) : "Unknown Date"}
-                                                </Typography>
-                                            </Box>
-                                            
-                                            {/* Badge showing number of attendees */}
-                                            {e.attendees && (
-                                                <Box sx={{ mr: 2, px: 2, py: 0.5, bgcolor: '#4dabf5', color: 'black', borderRadius: 4, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                    {e.attendees.length} Participants
-                                                </Box>
-                                            )}
+                    meetings.map((e, i) => (
+                        <Paper key={i} elevation={3} sx={{ borderRadius: 2, overflow: 'hidden', bgcolor: '#16213e' }}>
+                            <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+                                
+                                <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
+                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Box>
+                                            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
+                                                {e.meetingCode}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: 'gray' }}>
+                                                {formatDate(e.date)}
+                                            </Typography>
                                         </Box>
-                                    </AccordionSummary>
+                                        <Box sx={{ mr: 2, px: 2, py: 0.5, bgcolor: '#ff9800', color: 'black', borderRadius: 4, fontWeight: 'bold' }}>
+                                            {e.attendees.length} Participants
+                                        </Box>
+                                    </Box>
+                                </AccordionSummary>
 
-                                    {/* Hidden Details (Attendees List) */}
-                                    <AccordionDetails sx={{ bgcolor: '#16213e', borderTop: '1px solid #333', p: 3 }}>
-                                        <Typography variant="subtitle2" sx={{ mb: 2, color: '#aaa', letterSpacing: '1px' }}>
-                                            PARTICIPANTS LIST
-                                        </Typography>
-                                        
-                                        <Grid container spacing={2}>
-                                            {e.attendees && e.attendees.length > 0 ? (
-                                                e.attendees.map((attendee, idx) => (
-                                                    <Grid item xs={12} sm={4} md={3} key={idx}>
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.05)' }}>
-                                                            <Avatar sx={{ bgcolor: '#ff9800' }}>
-                                                                {attendee.name ? attendee.name.charAt(0).toUpperCase() : "?"}
-                                                            </Avatar>
-                                                            <Box>
-                                                                <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>
-                                                                    {attendee.name}
-                                                                </Typography>
-                                                                <Typography variant="caption" sx={{ color: '#aaa' }}>
-                                                                    @{attendee.username}
-                                                                </Typography>
-                                                            </Box>
+                                <AccordionDetails sx={{ bgcolor: '#0f172a', borderTop: '1px solid #333', p: 3 }}>
+                                    <Grid container spacing={2}>
+                                        {e.attendees.map((attendee, idx) => (
+                                            <Grid item xs={12} md={6} key={idx}>
+                                                <Paper sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                    <Avatar sx={{ bgcolor: '#4dabf5' }}>
+                                                        {attendee.user?.name?.charAt(0) || "?"}
+                                                    </Avatar>
+                                                    <Box sx={{ width: '100%' }}>
+                                                        <Typography variant="body1" fontWeight="bold" color="white">
+                                                            {attendee.user?.name || "Unknown"}
+                                                        </Typography>
+                                                        
+                                                        {/* --- DURATION STATS --- */}
+                                                        <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                                            <Typography variant="caption" sx={{ color: '#aaa' }}>
+                                                                Joined at: {formatTime(attendee.joinTime)}
+                                                            </Typography>
+                                                            <Typography variant="caption" sx={{ color: '#aaa' }}>
+                                                                Left at: {attendee.leaveTime ? formatTime(attendee.leaveTime) : "Active"}
+                                                            </Typography>
+                                                            <Typography variant="caption" sx={{ color: '#ff9800', fontWeight: 'bold' }}>
+                                                                Duration: {calculateDuration(attendee.joinTime, attendee.leaveTime)}
+                                                            </Typography>
                                                         </Box>
-                                                    </Grid>
-                                                ))
-                                            ) : (
-                                                <Typography sx={{ color: 'gray', fontStyle: 'italic' }}>
-                                                    No attendee details available.
-                                                </Typography>
-                                            )}
-                                        </Grid>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </Paper>
-                        )
-                    })
+                                                    </Box>
+                                                </Paper>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Paper>
+                    ))
                 )}
             </Box>
         </div>
