@@ -64,28 +64,26 @@ export default function VideoMeetComponent() {
     const { addToUserHistory } = useContext(AuthContext);
 
     const markLeave = async () => {
-        try {
-            if(localStorage.getItem("token")) {
-                const data = {
-                    token: localStorage.getItem("token"),
-                    meeting_code: window.location.href
-                };
-                
-                // Using native fetch with 'keepalive'
-                // This forces the request to finish even if the tab closes
-                await fetch(`${server_url}/api/v1/users/update_leave_time`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                    keepalive: true // <--- THE MAGIC FIX
-                });
-            }
-        } catch (e) {
-            console.log("Error marking leave time:", e);
+    try {
+        if (localStorage.getItem("token")) {
+            const data = {
+                token: localStorage.getItem("token"),
+                meeting_code: window.location.href
+            };
+
+            await fetch(`${server_url}/api/v1/users/update_leave_time`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                keepalive: true // <--- This does the magic!
+            });
         }
+    } catch (e) {
+        console.log("Error marking leave time:", e);
     }
+}
 
     // 2. Trigger on Component Unmount (Closing tab or Back button)
     useEffect(() => {
@@ -481,23 +479,18 @@ export default function VideoMeetComponent() {
 
    
    let handleEndCall = () => {
-        try {
-            let tracks = localVideoref.current.srcObject.getTracks()
-            tracks.forEach(track => track.stop())
-        } catch (e) { }
+    try {
+        let tracks = localVideoref.current.srcObject.getTracks()
+        tracks.forEach(track => track.stop())
+    } catch (e) { }
 
-        // Trigger the database update
-        markLeave();
-
-        // Wait 500ms before redirecting
-        setTimeout(() => {
-            if (localStorage.getItem("token")) {
-                window.location.href = "/home";
-            } else {
-                window.location.href = "/";
-            }
-        }, 500); // <--- 0.5 Second Delay
-    } 
+    // Redirect immediately - the 'keepalive' request above continues in background
+    if (localStorage.getItem("token")) {
+        window.location.href = "/home";
+    } else {
+        window.location.href = "/";
+    }
+}
 
 
     let openChat = () => {
@@ -589,8 +582,14 @@ export default function VideoMeetComponent() {
                     {showModal ? (
                         <div className={styles.chatRoom}>
                             <div className={styles.chatContainer}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '10px' }}>
-        <h1 style={{ margin: 0 }}>Chat</h1>
+                                <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        paddingBottom: '10px',
+        borderBottom: '1px solid #ddd' // Light gray divider
+    }}>
+        <h1 style={{ margin: 0, fontSize: '1.2rem', color: 'black' }}>Chat</h1>
         <IconButton onClick={closeChat} style={{ color: 'white' }}>
             <CloseIcon />
         </IconButton>
