@@ -223,10 +223,29 @@ function HomeComponent() {
 
 </svg>
 
-            <svg className={`${styles.pattern} ${styles.patternBottom}`} width="500" height="300" viewBox="0 0 500 300" fill="none">
-                 <path d="M10 10 C 150 250, 350 50, 490 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
-                 <path d="M10 50 C 150 290, 350 90, 490 330" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none" opacity="0.5"/>
-            </svg>
+            <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
+    
+    {/* Wave 1: The Darker Inner Wave */}
+    <path 
+        d="M-50 250 Q 300 300, 600 650" 
+        stroke="#ff9800" 
+        strokeWidth="2" 
+        strokeDasharray="10 10" 
+        opacity="0.7" /* Increased from 0.6 */
+        fill="none"
+    />
+    
+    {/* Wave 2: The Faded Outer Wave (Moved higher & made brighter) */}
+    <path 
+        d="M-50 100 Q 450 150, 750 500" 
+        stroke="#ff9800" 
+        strokeWidth="2" 
+        strokeDasharray="10 10" 
+        opacity="0.4" /* DOUBLED VISIBILITY (was 0.2) */
+        fill="none"
+    />
+
+</svg>
 
             <div className={styles.simpleFooter}>
                 <p>&copy; 2026 WanderCall. All rights reserved.</p>

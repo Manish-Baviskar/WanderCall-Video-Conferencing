@@ -20,13 +20,13 @@
 .patternCorner {
     top: 0;
     left: 0;
-    width: 100vw;  /* Stretch across the screen width */
-    height: 100vh; /* Stretch across the screen height */
+    width: 100vw;  /* Must span full width */
+    height: 100vh; /* Must span full height */
     z-index: 0;
-    opacity: 0.4;  /* Slightly more visible */
     pointer-events: none;
-    transform: none; /* Reset any previous rotation to keep it simple */
+    position: absolute; /* Crucial */
 }
+
 .patternBottom {
     bottom: 0;
     right: 0;
