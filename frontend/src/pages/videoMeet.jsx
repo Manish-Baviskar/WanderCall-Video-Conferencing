@@ -66,13 +66,15 @@ export default function VideoMeetComponent() {
     const markLeave = async () => {
         try {
             if(localStorage.getItem("token")) {
-                const payload = {
+                let data = {
                     token: localStorage.getItem("token"),
                     meeting_code: window.location.href
                 };
 
-                // Use Beacon for reliability during tab close
-                const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                // Create a JSON Blob (Required for sendBeacon to send JSON)
+                const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+                
+                // This sends the data reliably in the background
                 navigator.sendBeacon(`${server_url}/api/v1/users/update_leave_time`, blob);
             }
         } catch (e) {
@@ -479,11 +481,11 @@ export default function VideoMeetComponent() {
             tracks.forEach(track => track.stop())
         } catch (e) { }
 
+        // Trigger the leave logic
+        await markLeave();
+
+        // Redirect
         if (localStorage.getItem("token")) {
-            // 1. WAIT for the database update to finish
-            await markLeave(); 
-            
-            // 2. THEN go to home
             window.location.href = "/home";
         } else {
             window.location.href = "/";
