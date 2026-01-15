@@ -17,14 +17,13 @@
     opacity: 0.6;
 }
 
-.patternTop {
+.patternLeft {
     top: 40%;         /* Vertically centered */
     left: 0;
     width: 400px;     /* Wide enough to reach the card */
     height: 400px;
-    transform: translate(-40%, -50%) rotate(10deg);
-    margin-top: -100px; /* Fine tune position upwards */
-    margin-left: -100px; /* Fine tune position leftwards */
+    transform: translate(-40%, -50%) rotate(10deg); /* Positioned on the edge */
+    z-index: 0;
 }
 
 .patternBottom {

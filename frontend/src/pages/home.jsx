@@ -199,10 +199,16 @@ function HomeComponent() {
             </div>
 
             {/* BACKGROUND PATTERNS (Restored!) */}
-            <svg className={`${styles.pattern} ${styles.patternTop}`} viewBox="0 0 400 400" fill="none">
-                <path d="M-50 100 Q 150 50, 350 200" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
-                <path d="M-50 150 Q 150 100, 350 250" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none" opacity="0.5"/>
-            </svg>
+            <svg className={`${styles.pattern} ${styles.patternLeft}`} viewBox="0 0 400 400" fill="none">
+    {/* Line 1 */}
+    <path d="M-50 100 Q 150 50, 350 200" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    
+    {/* Line 2 (Parallel-ish) */}
+    <path d="M-50 150 Q 150 100, 350 250" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    
+    {/* Line 3 */}
+    <path d="M-50 200 Q 150 150, 350 300" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+</svg>
 
             <svg className={`${styles.pattern} ${styles.patternBottom}`} width="500" height="300" viewBox="0 0 500 300" fill="none">
                  <path d="M10 10 C 150 250, 350 50, 490 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
