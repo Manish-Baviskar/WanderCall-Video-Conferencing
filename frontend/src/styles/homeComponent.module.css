@@ -1,11 +1,34 @@
 /* MAIN WRAPPER: Black Background */
 .homeWrapper {
-    background-color: #000000; /* Pure Black */
+    background-color: #000000;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
     color: white;
+    position: relative; /* Needed for pattern positioning */
+    overflow: hidden;   /* Stops patterns from creating scrollbars */
+}
+
+/* BACKGROUND PATTERNS (The Orange Waves) */
+.pattern {
+    position: absolute;
+    z-index: 0; /* Behind everything */
+    opacity: 0.6;
+}
+
+.patternTop {
+    top: 0;
+    left: 0;
+    width: 60%;
+    max-width: 600px;
+}
+
+.patternBottom {
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    max-width: 700px;
 }
 
 /* NAVBAR */
@@ -13,75 +36,86 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
-    background-color: transparent; /* Seamless blend */
+    padding: 25px 50px;
+    z-index: 10; /* Above patterns */
 }
 
 .navHeader h2 {
-    color: #ff9800; /* Orange Logo */
+    color: white;
     margin: 0;
     font-weight: 700;
     letter-spacing: 1px;
+    font-size: 1.8rem;
 }
 
-/* ACCOUNT PILL (Orange) */
+/* ACCOUNT PILL */
 .accountPill {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background-color: #ff9800;
-    padding: 5px 5px 5px 15px;
+    gap: 12px;
+    background-color: rgba(255, 152, 0, 0.15); /* Glassy Orange */
+    border: 1px solid #ff9800;
+    padding: 6px 6px 6px 20px;
     border-radius: 50px;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .accountPill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(255, 152, 0, 0.4); /* Glow effect */
+    background-color: #ff9800;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6);
+}
+
+.accountPill:hover .userName {
+    color: black;
 }
 
 .userName {
-    color: black; /* Black text on orange pill */
-    font-weight: bold;
+    color: #ff9800;
+    font-weight: 600;
     font-size: 1rem;
+    transition: 0.3s;
 }
 
-/* MAIN CONTENT: Centered */
+/* MAIN CONTENT */
 .mainContentContainer {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    z-index: 5; /* Above patterns */
 }
 
-/* THE CARD: Dark Grey */
+/* THE CARD */
 .card {
-    background-color: #111; /* Dark Grey Card */
+    background: #0a0a0a; /* Very Dark Grey */
     width: 100%;
-    max-width: 850px;
-    border-radius: 20px;
-    border: 1px solid #333; /* Subtle border */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    max-width: 900px;
+    border-radius: 24px;
+    border: 1px solid #333;
+    /* THIS IS THE GLOW YOU WERE MISSING: */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 152, 0, 0.1); 
     display: flex;
-    overflow: hidden;
-    padding: 50px;
-    gap: 50px;
+    padding: 60px;
+    gap: 60px;
+    position: relative;
+    backdrop-filter: blur(10px); /* Glassmorphism */
 }
 
 /* LEFT SIDE */
 .cardActions {
-    flex: 1;
+    flex: 1.2;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .cardActions h1 {
-    color: white;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    line-height: 1.2;
     margin-bottom: 10px;
+    color: white;
 }
 
 .accentText {
@@ -89,94 +123,102 @@
 }
 
 .cardActions p {
-    color: #888;
-    margin-bottom: 30px;
+    color: #999;
+    margin-bottom: 35px;
+    font-size: 1.1rem;
 }
 
 /* JOIN SECTION */
 .joinSection {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
-/* Input Field - Dark Mode Styling */
+/* Custom Input Styling */
 .inputField .MuiOutlinedInput-root {
-    border-radius: 8px;
-    background-color: #222; /* Dark input background */
+    background-color: #1a1a1a;
     color: white;
+    border-radius: 12px;
+    height: 55px;
 }
 .inputField .MuiOutlinedInput-notchedOutline {
     border-color: #444;
 }
 .inputField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #ff9800;
+    border-color: #777;
 }
 .inputField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #ff9800;
 }
 
-/* Join Button */
+/* BUTTONS */
 .joinBtn.MuiButton-root {
     background-color: #ff9800;
     color: black;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 10px 30px;
-    text-transform: none;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 0 35px;
     font-size: 1rem;
+    height: 55px;
 }
 .joinBtn.MuiButton-root:hover {
-    background-color: #e68a00;
+    background-color: #ffac33;
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.4);
 }
 
-/* Create Button */
 .createBtn.MuiButton-root {
-    background-color: #222;
-    color: white;
-    border: 1px solid #333;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 12px;
-    text-transform: none;
+    background-color: transparent;
+    color: #fff;
+    border: 1px dashed #555;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 15px;
     font-size: 1rem;
 }
 .createBtn.MuiButton-root:hover {
-    background-color: #333;
-    border-color: #555;
+    border-color: #ff9800;
+    color: #ff9800;
+    background-color: rgba(255, 152, 0, 0.05);
 }
 
-/* RIGHT SIDE: Logo */
+/* RIGHT SIDE (LOGO AREA) */
 .cardImageSection {
-    flex: 1;
+    flex: 0.8;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-left: 1px solid #222; /* Divider line */
+    background: radial-gradient(circle, rgba(255,152,0,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 20px;
+}
+
+.cardImageSection img {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255,152,0,0.4));
 }
 
 /* FOOTER */
 .simpleFooter {
     text-align: center;
     padding: 20px;
-    color: #555;
+    color: #444;
     font-size: 0.85rem;
+    z-index: 10;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
+/* RESPONSIVE */
+@media (max-width: 900px) {
     .card {
         flex-direction: column-reverse;
-        padding: 30px;
+        padding: 40px;
+        gap: 30px;
         text-align: center;
-    }
-    .cardImageSection {
-        border-left: none;
-        border-bottom: 1px solid #222;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
     }
     .joinSection {
         flex-direction: column;
+    }
+    .cardImageSection {
+        padding: 20px;
     }
 }

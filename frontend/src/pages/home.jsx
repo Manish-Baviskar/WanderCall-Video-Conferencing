@@ -7,45 +7,39 @@ import styles from '../styles/homeComponent.module.css';
 import { IconButton, Avatar, Menu, MenuItem, Tooltip, Divider, Button, TextField } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HistoryIcon from '@mui/icons-material/History';
-import VideoCallIcon from '@mui/icons-material/VideoCall';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 function HomeComponent() {
     let navigate = useNavigate();
     const [meetingCode, setMeetingCode] = useState("");
     const { addToUserHistory } = useContext(AuthContext);
-
     const [username, setUsername] = useState("User");
 
+    // --- USERNAME FIX LOGIC ---
     useEffect(() => {
-        let storedName = localStorage.getItem("username") || localStorage.getItem("userId");
+        // Try all possible keys where name might be stored
+        const storedName = localStorage.getItem("username") || localStorage.getItem("name") || localStorage.getItem("userId");
         
-        if (!storedName || storedName === "undefined" || storedName === "null") {
-            storedName = "User";
+        if (storedName && storedName !== "undefined" && storedName !== "null") {
+            setUsername(storedName);
+        } else {
+            // DEBUG: If it says User, check Console to see what is actually in storage
+            console.log("Local Storage Dump:", localStorage);
         }
-        
-        setUsername(storedName);
     }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = Boolean(anchorEl);
 
-    const handleMenuClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+    const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuClose = () => setAnchorEl(null);
 
     const handleLogout = () => {
         localStorage.clear();
         navigate("/");
     };
 
-    const handleHistory = () => {
-        navigate("/history");
-    };
+    const handleHistory = () => navigate("/history");
 
     let handleJoinVideoCall = async () => {
         if (meetingCode.trim().length > 0) {
@@ -65,30 +59,26 @@ function HomeComponent() {
     };
 
     return (
-        
         <div className={styles.homeWrapper}>
             
-            
+            {/* NAVBAR */}
             <nav className={styles.homeNav}>
                 <div className={styles.navHeader}>
                     <h2>WanderCall</h2>
                 </div>
 
                 <div className={styles.homeNavlist}>
-                    
                     <div className={styles.accountPill} onClick={handleMenuClick}>
                         <span className={styles.userName}>{username}</span>
                         <Tooltip title="Account Settings">
                             <IconButton size="small" sx={{ padding: 0 }}>
-                                
-                                <Avatar sx={{ width: 40, height: 40, bgcolor: 'black', color: '#ff9800', fontWeight: 'bold' }}>
+                                <Avatar sx={{ width: 38, height: 38, bgcolor: '#ff9800', color: 'black', fontWeight: 'bold' }}>
                                     {username.charAt(0).toUpperCase()}
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
                     </div>
 
-                    
                     <Menu
                         anchorEl={anchorEl}
                         id="account-menu"
@@ -101,9 +91,7 @@ function HomeComponent() {
                                 overflow: 'visible',
                                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                 mt: 1.5,
-                                bgcolor: '#1a1a1a', 
-                                color: 'white',
-                                border: '1px solid #333',
+                                bgcolor: '#1a1a1a', color: 'white', border: '1px solid #333',
                                 '& .MuiAvatar-root': { width: 32, height: 32, ml: -0.5, mr: 1 },
                                 '&:before': {
                                     content: '""', display: 'block', position: 'absolute',
@@ -126,38 +114,29 @@ function HomeComponent() {
                 </div>
             </nav>
 
-            
+            {/* MAIN CARD */}
             <div className={styles.mainContentContainer}>
                 <div className={styles.card}>
-                    
-                    
                     <div className={styles.cardActions}>
                         <h1>Hello, <span className={styles.accentText}>{username}!</span></h1>
-                        <p>Seamless video calling with WanderCall.</p>
+                        <p>Enter a code to join a meeting or start a new one.</p>
 
                         <div className={styles.joinSection}>
                             <TextField
                                 fullWidth
                                 variant="outlined"
-                                placeholder="Enter Meeting Code"
+                                placeholder="Enter Code (e.g. q5x-99p)"
                                 value={meetingCode}
                                 onChange={e => setMeetingCode(e.target.value)}
                                 className={styles.inputField}
-                                InputProps={{
-                                    style: { color: 'white' } 
-                                }}
                             />
-                            <Button 
-                                variant="contained" 
-                                className={styles.joinBtn}
-                                onClick={handleJoinVideoCall}
-                            >
+                            <Button variant="contained" className={styles.joinBtn} onClick={handleJoinVideoCall}>
                                 Join
                             </Button>
                         </div>
 
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             fullWidth
                             className={styles.createBtn}
                             onClick={handleCreateNewMeeting}
@@ -168,13 +147,24 @@ function HomeComponent() {
                     </div>
 
                     <div className={styles.cardImageSection}>
-                         <img src="/logo.png" alt="WanderCall Logo" style={{ width: '150px', opacity: 0.8 }} />
+                         <img src="/logo.png" alt="WanderCall Logo" />
                     </div>
                 </div>
             </div>
 
+            {/* BACKGROUND PATTERNS (Restored!) */}
+            <svg className={`${styles.pattern} ${styles.patternTop}`} width="400" height="200" viewBox="0 0 400 200" fill="none">
+                <path d="M10 100 C 100 10, 200 190, 390 100" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
+                <path d="M10 140 C 100 50, 200 230, 390 140" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none" opacity="0.5"/>
+            </svg>
+
+            <svg className={`${styles.pattern} ${styles.patternBottom}`} width="500" height="300" viewBox="0 0 500 300" fill="none">
+                 <path d="M10 10 C 150 250, 350 50, 490 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
+                 <path d="M10 50 C 150 290, 350 90, 490 330" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" fill="none" opacity="0.5"/>
+            </svg>
+
             <div className={styles.simpleFooter}>
-                <p>&copy; {new Date().getFullYear()} WanderCall. All rights reserved.</p>
+                <p>&copy; 2026 WanderCall. All rights reserved.</p>
             </div>
 
         </div>
