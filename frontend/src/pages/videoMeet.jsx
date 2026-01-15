@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import axios from 'axios';
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff'
 import styles from "../styles/videoComponent.module.css";
@@ -65,10 +66,14 @@ export default function VideoMeetComponent() {
     const markLeave = async () => {
         try {
             if(localStorage.getItem("token")) {
-                await axios.post(`${server_url}/api/v1/users/update_leave_time`, {
+                const payload = {
                     token: localStorage.getItem("token"),
                     meeting_code: window.location.href
-                });
+                };
+
+                // Use Beacon for reliability during tab close
+                const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                navigator.sendBeacon(`${server_url}/api/v1/users/update_leave_time`, blob);
             }
         } catch (e) {
             console.log("Error marking leave time:", e);
@@ -467,19 +472,21 @@ export default function VideoMeetComponent() {
         setScreen(!screen);
     }
 
-    let handleEndCall = () => {
+   // Make this function ASYNC
+    let handleEndCall = async () => {
         try {
             let tracks = localVideoref.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        
+
         if (localStorage.getItem("token")) {
-            // 1. If User is Logged In
-            markLeave();             // Save the "Left At" time
-            window.location.href = "/home";  // Go to Dashboard
+            // 1. WAIT for the database update to finish
+            await markLeave(); 
+            
+            // 2. THEN go to home
+            window.location.href = "/home";
         } else {
-            // 2. If Guest
-            window.location.href = "/";      // Go to Landing Page
+            window.location.href = "/";
         }
     }
 
@@ -572,7 +579,12 @@ export default function VideoMeetComponent() {
                     {showModal ? (
                         <div className={styles.chatRoom}>
                             <div className={styles.chatContainer}>
-                                <h1>Chat</h1>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '10px' }}>
+        <h1 style={{ margin: 0 }}>Chat</h1>
+        <IconButton onClick={closeChat} style={{ color: 'white' }}>
+            <CloseIcon />
+        </IconButton>
+    </div>
                                 <div className={styles.chattingDisplay}>
                                     {messages.length !== 0 ? (
                                         messages.map((item, index) => {
@@ -590,7 +602,7 @@ export default function VideoMeetComponent() {
                                 <div className={styles.chattingArea}>
                                     <TextField
                                         value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
+                                        onChange={handleMessage}
                                         id="outlined-basic"
                                         label="Enter Your chat"
                                         variant="outlined"
@@ -641,7 +653,7 @@ export default function VideoMeetComponent() {
                         ) : ( <></> )}
                         <Badge badgeContent={newMessages} max={999} color='orange'>
                             <IconButton 
-                                onClick={() => setModal(!showModal)} 
+                                onClick={openChat} 
                                 style={{ color: "white" }}
                                 className={`${styles.controlIcon} ${styles.animateBtn}`} 
                             >
