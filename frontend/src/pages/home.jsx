@@ -199,53 +199,18 @@ function HomeComponent() {
             </div>
 
             {/* BACKGROUND PATTERNS (Restored!) */}
-            <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
-    
-    {/* Wave 1: Darker, sharper curve */}
-    <path 
-        d="M-50 200 Q 400 250, 700 600" 
-        stroke="#ff9800" 
-        strokeWidth="2" 
-        strokeDasharray="10 10" 
-        opacity="0.6" /* Darker */
-        fill="none"
-    />
-    
-    {/* Wave 2: Faded, wider curve (Not parallel) */}
-    <path 
-        d="M-50 150 Q 550 200, 850 700" 
-        stroke="#ff9800" 
-        strokeWidth="2" 
-        strokeDasharray="10 10" 
-        opacity="0.2" /* Little Fade */
-        fill="none"
-    />
+           <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
+                {/* Darker Inner Wave */}
+                <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.7" fill="none" />
+                {/* Faded Outer Wave */}
+                <path d="M-50 100 Q 450 150, 750 500" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.4" fill="none" />
+            </svg>
 
-</svg>
-
-            <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
-    
-    {/* Wave 1: The Darker Inner Wave */}
-    <path 
-        d="M-50 250 Q 300 300, 600 650" 
-        stroke="#ff9800" 
-        strokeWidth="2" 
-        strokeDasharray="10 10" 
-        opacity="0.7" /* Increased from 0.6 */
-        fill="none"
-    />
-    
-    {/* Wave 2: The Faded Outer Wave (Moved higher & made brighter) */}
-    <path 
-        d="M-50 100 Q 450 150, 750 500" 
-        stroke="#ff9800" 
-        strokeWidth="2" 
-        strokeDasharray="10 10" 
-        opacity="0.4" /* DOUBLED VISIBILITY (was 0.2) */
-        fill="none"
-    />
-
-</svg>
+            {/* --- BOTTOM RIGHT WAVE (Restored) --- */}
+            {/* This is the code that was missing in your previous attempt */}
+            <svg style={{ position: 'absolute', bottom: 0, right: 0, width: '500px', height: '300px', zIndex: 0, pointerEvents: 'none' }} viewBox="0 0 500 300" fill="none">
+                 <path d="M490 10 C 350 250, 150 50, 10 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+            </svg>
 
             <div className={styles.simpleFooter}>
                 <p>&copy; 2026 WanderCall. All rights reserved.</p>

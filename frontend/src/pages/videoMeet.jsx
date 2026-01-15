@@ -568,154 +568,163 @@ useEffect(() => {
 
     }
 
+    // ... all your existing logic above ...
+
     return (
-        <div>
-            {askForUsername === true ? (
-                <div className={styles.lobbyContainer}>
-                    <h1>Enter Lobby</h1>
-                    <div className={styles.lobbyForm}>
-                        <TextField 
-                            id="outlined-basic" 
-                            label="Username" 
-                            value={username} 
-                            onChange={e => setUsername(e.target.value)} 
-                            variant="outlined"
-                            sx={{
-                                "& .MuiOutlinedInput-root": {
-                                    color: "white",
-                                    "& fieldset": { borderColor: "white" },
-                                    "&:hover fieldset": { borderColor: "white" },
-                                    "&.Mui-focused fieldset": { borderColor: "#007bff" }
-                                },
-                                "& .MuiInputLabel-root": { color: "white" },
-                                "& .MuiInputLabel-root.Mui-focused": { color: "#007bff" }
-                            }}
-                        />
-                        <Button 
-                            variant="contained" 
-                            onClick={connect}
-                            className={`${styles.primaryBtn} ${styles.animateBtn}`} 
-                        >
-                            Connect
-                        </Button>
-                    </div>
-                    <div className={styles.videoPreviewContainer}>
-                        <video ref={localVideoref} autoPlay muted></video>
-                    </div>
-                </div>
-            ) : (
-                <div className={styles.meetVideoContainer}>
-                    {showModal ? (
-                        <div className={styles.chatRoom}>
-                            <div className={styles.chatContainer}>
-                                <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        paddingBottom: '10px',
-        borderBottom: '1px solid #ddd' // Light gray divider
-    }}>
-        <h1 style={{ margin: 0, fontSize: '1.2rem', color: 'black' }}>Chat</h1>
-        <IconButton onClick={closeChat} style={{ color: 'black' }}>
-            <CloseIcon />
-        </IconButton>
-    </div>
-                                <div className={styles.chattingDisplay}>
-                                    {messages.length !== 0 ? (
-                                        messages.map((item, index) => {
-                                            return (
-                                                <div style={{ marginBottom: "20px" }} key={index}>
-                                                    <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                                                    <p>{item.data}</p>
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <p>No Messages Yet</p>
-                                    )}
-                                </div>
-                                <div className={styles.chattingArea}>
-                                    <TextField
-                                        value={message}
-                                        onChange={handleMessage}
-                                        id="outlined-basic"
-                                        label="Enter Your chat"
-                                        variant="outlined"
-                                    />
-                                    <Button 
-                                        variant='contained' 
-                                        onClick={sendMessage}
-                                        className={`${styles.primaryBtn} ${styles.animateBtn}`} 
-                                        style={{ marginLeft: '10px' }}
-                                    >
-                                        Send
-                                    </Button>
-                                </div>
-                            </div>
+        // 1. OUTER CONTAINER: Dark Gradient Background
+        <div style={{ 
+            minHeight: '100vh', 
+            background: 'radial-gradient(circle at top left, #1a1a1a, #000000)', 
+            position: 'relative',
+            overflow: 'hidden',
+            fontFamily: 'Poppins, sans-serif'
+        }}>
+
+            {/* 2. BACKGROUND WAVES */}
+            {/* Top Left Waves */}
+            <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} viewBox="0 0 1440 900" preserveAspectRatio="xMinYMin slice">
+                 <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.7" fill="none" />
+                 <path d="M-50 100 Q 450 150, 750 500" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.4" fill="none" />
+            </svg>
+
+            {/* Bottom Right Wave */}
+            <svg style={{ position: 'absolute', bottom: 0, right: 0, width: '500px', height: '300px', zIndex: 0, pointerEvents: 'none' }} viewBox="0 0 500 300" fill="none">
+                 <path d="M490 10 C 350 250, 150 50, 10 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+            </svg>
+
+            {/* 3. GLASS OVERLAY */}
+            <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker tint for video focus
+                backdropFilter: 'blur(30px)', 
+                zIndex: 1,
+                display: 'flex', flexDirection: 'column', overflowY: 'auto',
+                color: 'white'
+            }}>
+
+                {/* --- LOBBY VIEW --- */}
+                {askForUsername === true ? (
+                    <div className={styles.lobbyContainer} style={{ background: 'transparent' }}>
+                        <h1 style={{ fontSize: '3rem', textShadow: '0 0 20px rgba(255,152,0,0.5)' }}>Enter Lobby</h1>
+                        
+                        <div className={styles.lobbyForm}>
+                            <TextField 
+                                id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined"
+                                sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                        color: "white", borderRadius: '12px', background: 'rgba(255,255,255,0.05)',
+                                        "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
+                                        "&:hover fieldset": { borderColor: "#ff9800" },
+                                        "&.Mui-focused fieldset": { borderColor: "#ff9800" }
+                                    },
+                                    "& .MuiInputLabel-root": { color: "#aaa" },
+                                    "& .MuiInputLabel-root.Mui-focused": { color: "#ff9800" }
+                                }}
+                            />
+                            <Button variant="contained" onClick={connect} className={`${styles.primaryBtn} ${styles.animateBtn}`} 
+                                style={{ background: '#ff9800', color: 'black', fontWeight: 'bold', padding: '15px 30px', borderRadius: '12px' }}>
+                                Connect
+                            </Button>
                         </div>
-                    ) : ( <></> )}
-
-                    <div className={styles.buttonContainers}>
-                        <IconButton 
-                            onClick={handleVideo} 
-                            style={{ color: "white" }}
-                            className={`${styles.controlIcon} ${styles.animateBtn}`}
-                        >
-                            {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
-                        </IconButton>
-                        <IconButton 
-                            onClick={handleEndCall} 
-                            style={{ color: "red" }}
-                            className={`${styles.endCallBtn} ${styles.animateBtn}`} 
-                        >
-                            <CallEndIcon />
-                        </IconButton>
-                        <IconButton 
-                            onClick={handleAudio} 
-                            style={{ color: "white" }}
-                            className={`${styles.controlIcon} ${styles.animateBtn}`} 
-                        >
-                            {audio === true ? <MicIcon /> : <MicOffIcon />}
-                        </IconButton>
-                        {screenAvailable === true ? (
-                            <IconButton 
-                                onClick={handleScreen} 
-                                style={{ color: "white" }}
-                                className={`${styles.controlIcon} ${styles.animateBtn}`} 
-                            >
-                                {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
-                            </IconButton>
-                        ) : ( <></> )}
-                        <Badge badgeContent={newMessages} max={999} color='orange'>
-                            <IconButton 
-                                onClick={openChat} 
-                                style={{ color: "white" }}
-                                className={`${styles.controlIcon} ${styles.animateBtn}`} 
-                            >
-                                <ChatIcon />
-                            </IconButton>
-                        </Badge>
+                        
+                        <div className={styles.videoPreviewContainer} style={{ border: '2px solid #ff9800', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 0 30px rgba(255,152,0,0.2)' }}>
+                            <video ref={localVideoref} autoPlay muted style={{ width: '100%', height: '100%', objectFit: 'cover' }}></video>
+                        </div>
                     </div>
-
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
-
-                    <div className={styles.conferenceView}>
-                        {videos.map((video) => (
-                            <div key={video.socketId}>
-                                <video
-                                    data-socket={video.socketId}
-                                    ref={ref => {
-                                        if (ref && video.stream) {
-                                            ref.srcObject = video.stream;
-                                        }
-                                    }}
-                                    autoPlay
-                                ></video>
+                ) : (
+                    
+                    // --- MEETING VIEW ---
+                    <div className={styles.meetVideoContainer} style={{ background: 'transparent', width: '100%', height: '100%' }}>
+                        
+                        {/* CHAT MODAL */}
+                        {showModal ? (
+                            <div className={styles.chatRoom} style={{ background: 'rgba(20,20,20,0.95)', borderLeft: '1px solid #333' }}>
+                                <div className={styles.chatContainer}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '10px', borderBottom: '1px solid #333' }}>
+                                        <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#ff9800' }}>Chat</h1>
+                                        <IconButton onClick={closeChat} style={{ color: 'white' }}><CloseIcon /></IconButton>
+                                    </div>
+                                    <div className={styles.chattingDisplay}>
+                                        {messages.length !== 0 ? (
+                                            messages.map((item, index) => (
+                                                <div style={{ marginBottom: "15px" }} key={index}>
+                                                    <p style={{ fontWeight: "bold", color: '#ff9800', fontSize: '0.9rem' }}>{item.sender}</p>
+                                                    <p style={{ color: '#ddd' }}>{item.data}</p>
+                                                </div>
+                                            ))
+                                        ) : (<p style={{color: '#666'}}>No Messages Yet</p>)}
+                                    </div>
+                                    <div className={styles.chattingArea}>
+                                        <TextField value={message} onChange={handleMessage} placeholder="Type a message..." variant="outlined" 
+                                            sx={{ input: { color: 'white' }, fieldset: { borderColor: '#444' } }} fullWidth 
+                                        />
+                                        <Button variant='contained' onClick={sendMessage} style={{ marginLeft: '10px', background: '#ff9800', color: 'black', fontWeight: 'bold' }}>Send</Button>
+                                    </div>
+                                </div>
                             </div>
-                        ))}
+                        ) : (<></>)}
+
+                        {/* --- CONTROLS BAR (Golden Glass Style) --- */}
+                        <div className={styles.buttonContainers} style={{
+                            position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)',
+                            display: 'flex', gap: '20px', padding: '12px 30px',
+                            background: 'rgba(255, 152, 0, 0.15)', // Golden Glass Background
+                            border: '1px solid rgba(255, 152, 0, 0.3)', // Golden Border
+                            backdropFilter: 'blur(15px)',
+                            borderRadius: '50px',
+                            zIndex: 100,
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                        }}>
+                            <IconButton onClick={handleVideo} style={{ color: video ? "white" : "#ff4444" }}>
+                                {video ? <VideocamIcon /> : <VideocamOffIcon />}
+                            </IconButton>
+                            
+                            <IconButton onClick={handleAudio} style={{ color: audio ? "white" : "#ff4444" }}>
+                                {audio ? <MicIcon /> : <MicOffIcon />}
+                            </IconButton>
+
+                            {screenAvailable && (
+                                <IconButton onClick={handleScreen} style={{ color: screen ? "#ff9800" : "white" }}>
+                                    {screen ? <StopScreenShareIcon /> : <ScreenShareIcon />}
+                                </IconButton>
+                            )}
+
+                            <Badge badgeContent={newMessages} max={99} color='warning'>
+                                <IconButton onClick={openChat} style={{ color: "white" }}>
+                                    <ChatIcon />
+                                </IconButton>
+                            </Badge>
+
+                            <IconButton onClick={handleEndCall} style={{ background: '#ff4444', color: "white", padding: '8px', marginLeft: '10px' }}>
+                                <CallEndIcon />
+                            </IconButton>
+                        </div>
+
+                        {/* --- MAIN VIDEO GRID --- */}
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', height: '100%', paddingBottom: '100px', gap: '20px' }}>
+                            
+                            {/* Local User Video */}
+                            <div style={{ position: 'relative', width: '400px', height: '300px', borderRadius: '15px', overflow: 'hidden', border: '2px solid rgba(255,152,0,0.5)', boxShadow: '0 0 20px rgba(0,0,0,0.5)' }}>
+                                <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted style={{ width: '100%', height: '100%', objectFit: 'cover' }}></video>
+                                <div style={{ position: 'absolute', bottom: '10px', left: '10px', background: 'rgba(0,0,0,0.6)', padding: '2px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>You</div>
+                            </div>
+
+                            {/* Remote Users Videos */}
+                            {videos.map((video) => (
+                                <div key={video.socketId} style={{ position: 'relative', width: '400px', height: '300px', borderRadius: '15px', overflow: 'hidden', border: '1px solid #444', background: '#000' }}>
+                                    <video
+                                        data-socket={video.socketId}
+                                        ref={ref => { if (ref && video.stream) ref.srcObject = video.stream; }}
+                                        autoPlay
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    ></video>
+                                </div>
+                            ))}
+                        </div>
+
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }

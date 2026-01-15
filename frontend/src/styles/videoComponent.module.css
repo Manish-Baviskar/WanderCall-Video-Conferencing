@@ -1,38 +1,37 @@
-
-
+/* --- CONTAINER RESETS (To let Glass show through) --- */
 .meetVideoContainer {
     position: relative;
-    height: 100vh;
-    background: rgb(1, 4, 48);
+    height: 100%; /* Changed from 100vh to 100% to fit wrapper */
+    width: 100%;
+    background: transparent; /* IMPORTANT: Transparent so waves show */
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.meetUserVideo {
-    position: absolute;
-    bottom: 10vh;
-    height: 20vh;
-    width: auto;
-    left: 20px; 
-    border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.2); 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+.lobbyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Fit wrapper */
+    min-height: 80vh;
+    background: transparent; /* Transparent */
+    color: white;
+    text-align: center;
+    gap: 30px;
     z-index: 10;
 }
 
-.buttonContainers {
-    position: absolute;
-    width: 100vw;
-    bottom: 20px; 
-    text-align: center;
-    z-index: 20;
-    display: flex;
-    justify-content: center;
-    gap: 15px; 
-}
-
-
-.buttonContainers svg {
-    font-size: 2.5rem; 
+/* --- VIDEO STYLING --- */
+.meetUserVideo {
+    /* If you use the grid layout, these positions are overridden, which is good. */
+    /* If you use absolute positioning (Picture in Picture), this applies: */
+    border-radius: 20px;
+    border: 2px solid #ff9800; /* Orange Border */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    object-fit: cover;
+    background: black;
 }
 
 .conferenceView {
@@ -42,33 +41,93 @@
     align-items: center;
     padding: 20px;
     gap: 20px;
-    height: 80vh;
+    height: 100%;
     overflow-y: auto; 
 }
 
-.conferenceView video {
-    height: 300px;   
-    width: 400px;    
-    max-width: 45vw; 
-    max-height: 40vh;
-    border-radius: 15px;
-    object-fit: cover;
-    border: 2px solid rgba(255,255,255,0.2);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    background-color: black;
+/* --- BUTTONS & CONTROLS --- */
+.buttonContainers {
+    /* Note: The JSX handles the fixed positioning now, 
+       but this class handles the responsiveness */
+    display: flex;
+    justify-content: center;
+    gap: 15px; 
 }
 
+.buttonContainers svg {
+    font-size: 2.5rem; 
+}
+
+/* --- ANIMATIONS & INTERACTION --- */
+.animateBtn {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
+    cursor: pointer !important;
+}
+
+/* Updated to ORANGE Theme */
+.primaryBtn {
+    background-color: #ff9800 !important; /* Orange */
+    color: black !important;
+    font-weight: bold !important;
+    border-radius: 25px !important;
+    padding: 10px 30px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-transform: none !important;
+    font-size: 1.1rem !important;
+}
+
+.primaryBtn:hover {
+    background-color: #e68a00 !important; /* Darker Orange */
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6); /* Golden Glow */
+}
+
+/* Glassy Control Icons */
+.controlIcon {
+    background-color: rgba(255, 255, 255, 0.1) !important; 
+    backdrop-filter: blur(5px);
+    padding: 12px !important; 
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.controlIcon:hover {
+    background-color: rgba(255, 152, 0, 0.8) !important; /* Orange on hover */
+    color: black !important;
+    transform: scale(1.15); 
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6); 
+    border: 1px solid #ff9800 !important;
+}
+
+.endCallBtn {
+    background-color: rgba(220, 53, 69, 0.8) !important; 
+    padding: 12px !important;
+    border: 1px solid rgba(255, 0, 0, 0.3) !important;
+}
+
+.endCallBtn:hover {
+    background-color: rgb(255, 0, 0) !important;
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.8); 
+}
+
+/* --- CHAT ROOM (Dark Theme Update) --- */
 .chatRoom {
     position: absolute;
-    height: 85vh; 
-    top: 5vh;
+    height: 75vh; 
+    top: 10vh;
     right: 20px;
-    background: white;
-    color: black !important;
+    
+    /* Dark Glass Styling */
+    background: rgba(20, 20, 20, 0.85) !important; 
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 152, 0, 0.3); /* Orange Border */
+    color: white !important;
+    
     border-radius: 15px;
     width: 30vw;
+    min-width: 300px;
     padding: 20px;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     z-index: 30;
     display: flex;    
     flex-direction: column;
@@ -84,146 +143,35 @@
 .chattingDisplay {
     flex-grow: 1; 
     overflow-y: auto;
-    margin-bottom: 70px; 
+    margin-bottom: 20px; 
+    padding-right: 5px;
+}
+
+/* Scrollbar for chat */
+.chattingDisplay::-webkit-scrollbar {
+    width: 5px;
+}
+.chattingDisplay::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
 }
 
 .chattingArea {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     display: flex;
     gap: 10px;
-    background: white;
+    background: transparent;
     padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-
-
-
-.animateBtn {
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
-    cursor: pointer !important;
-}
-
-
-.primaryBtn {
-    background-color: #007bff !important;
-    color: white !important;
-    font-weight: bold !important;
-    border-radius: 25px !important;
-    padding: 10px 25px !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    text-transform: none !important;
-}
-
-.primaryBtn:hover {
-    background-color: #0056b3 !important;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.4);
-}
-
-.controlIcon {
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Glass effect */
-    backdrop-filter: blur(5px);
-    padding: 12px !important; /* Adds space around the icon */
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.controlIcon:hover {
-    background-color: rgba(255, 255, 255, 0.3) !important;
-    transform: scale(1.15); /* Zooms in */
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); /* bright white glow */
-}
-
-.endCallBtn {
-    background-color: rgba(220, 53, 69, 0.8) !important; /* Solid red */
-    padding: 12px !important;
-    border: 1px solid rgba(255, 0, 0, 0.3) !important;
-}
-
-.endCallBtn:hover {
-    background-color: rgb(255, 0, 0) !important;
-    transform: scale(1.2);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.8); /* Intense red glow */
-}
-
-
-
-@media (max-width: 768px) {
-    .conferenceView {
-        flex-direction: column;
-        align-items: center;
-        height: auto;
-        padding-bottom: 100px; 
-    }
-
-    .conferenceView video {
-        width: 90vw; 
-        height: auto;
-        min-height: 25vh;
-    }
-
-    .chatRoom {
-        width: 90vw; 
-        right: 5vw; 
-        height: 70vh;
-        top: 10vh;
-    }
-
-    .meetUserVideo {
-        width: 30vw;
-        height: auto;
-        bottom: 100px; 
-        right: 20px;
-        left: auto; 
-    }
-
-    .buttonContainers {
-        flex-wrap: wrap;
-        bottom: 10px;
-        padding-bottom: 10px;
-        background: rgba(1, 4, 48, 0.9); 
-    }
-    
-    .buttonContainers svg {
-        font-size: 2rem;
-    }
-
-    .lobbyForm {
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
-
-    .lobbyForm > div { 
-        width: 80vw !important;
-    }
-
-    .videoPreviewContainer {
-        height: 40vh; 
-        width: 90vw;
-    }
-}
-
-
-
-.lobbyContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: rgb(1, 4, 48); 
-    color: white;
-    text-align: center;
-    gap: 30px;
-}
-
+/* --- LOBBY ELEMENTS --- */
 .lobbyForm {
     display: flex;
     align-items: center;
     gap: 20px; 
     margin-bottom: 20px;
+    z-index: 20;
 }
 
 .videoPreviewContainer {
@@ -234,8 +182,8 @@
     background: black;
     border-radius: 20px;
     overflow: hidden;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 2px solid rgba(255, 152, 0, 0.5); /* Orange Border */
+    box-shadow: 0 0 40px rgba(255, 152, 0, 0.15);
 }
 
 .videoPreviewContainer video {
@@ -243,4 +191,35 @@
     height: 100%;
     object-fit: cover;
     transform: scaleX(-1); 
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .chatRoom {
+        width: 90vw; 
+        right: 5vw; 
+        height: 60vh;
+        top: 15vh;
+    }
+
+    .buttonContainers {
+        width: 90%;
+        padding: 10px;
+        bottom: 20px;
+    }
+    
+    .buttonContainers svg {
+        font-size: 1.8rem;
+    }
+
+    .lobbyForm {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .videoPreviewContainer {
+        height: 300px; 
+        width: 90vw;
+    }
 }
