@@ -147,7 +147,7 @@ function HomeComponent() {
                     </div>
 
                     <div className={styles.cardImageSection}>
-                         <img src="/logo.png" alt="WanderCall Logo" />
+                         <img src="/homepage.svg" alt="WanderCall Logo" />
                     </div>
                 </div>
             </div>

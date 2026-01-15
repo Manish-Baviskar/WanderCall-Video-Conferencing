@@ -89,18 +89,22 @@
 
 /* THE CARD */
 .card {
-    background: #0a0a0a; /* Very Dark Grey */
+    background: #0a0a0a;
     width: 100%;
     max-width: 900px;
     border-radius: 24px;
-    border: 1px solid #333;
-    /* THIS IS THE GLOW YOU WERE MISSING: */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 152, 0, 0.1); 
+    
+    /* ADDED: A visible orange border */
+    border: 1px solid rgba(255, 152, 0, 0.3);
+
+    /* UPDATED: Stronger Glow Effect */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 152, 0, 0.2); 
+    
     display: flex;
     padding: 60px;
     gap: 60px;
     position: relative;
-    backdrop-filter: blur(10px); /* Glassmorphism */
+    backdrop-filter: blur(10px);
 }
 
 /* LEFT SIDE */
@@ -154,32 +158,32 @@
 
 /* BUTTONS */
 .joinBtn.MuiButton-root {
-    background-color: #ff9800;
-    color: black;
+    background-color: #ff9800 !important; /* !important stops it from turning Blue */
+    color: black !important;
     font-weight: 700;
     border-radius: 12px;
     padding: 0 35px;
     font-size: 1rem;
     height: 55px;
 }
+
 .joinBtn.MuiButton-root:hover {
-    background-color: #ffac33;
+    background-color: #ffac33 !important;
     box-shadow: 0 0 15px rgba(255, 152, 0, 0.4);
 }
 
 .createBtn.MuiButton-root {
-    background-color: transparent;
-    color: #fff;
-    border: 1px dashed #555;
+    background-color: transparent !important;
+    color: #ff9800 !important; /* Orange Text */
+    border: 1px solid #ff9800 !important; /* Solid Orange Border */
     font-weight: 600;
     border-radius: 12px;
     padding: 15px;
     font-size: 1rem;
 }
 .createBtn.MuiButton-root:hover {
-    border-color: #ff9800;
-    color: #ff9800;
-    background-color: rgba(255, 152, 0, 0.05);
+    background-color: rgba(255, 152, 0, 0.1) !important;
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.2);
 }
 
 /* RIGHT SIDE (LOGO AREA) */
