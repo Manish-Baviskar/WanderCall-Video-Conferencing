@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/landing.module.css";
-
-import Footer from './footer.jsx';
+import AboutModal from "./AboutModal";
 
 export default function LandingPage() {
   const router = useNavigate();
@@ -15,33 +14,62 @@ export default function LandingPage() {
   return (
     <div className={styles.landingWrapper}>
       {/* 1. BACKGROUND WAVES (Same as Home) */}
+      {/* --- NEW: LEFT WAVE (Behind Text Only) --- */}
+      {/* Notice: width is only 50% so it stops in the middle */}
       <svg
-        className={styles.landingWave}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "60vw",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+        viewBox="0 0 600 800"
+        fill="none"
+        preserveAspectRatio="none"
+      >
+        {/* A smooth, solid curve that cups the text area */}
+        <path
+          d="M -100 100 C 100 300, 400 0, 600 200"
+          stroke="#ff9800"
+          strokeWidth="3"
+          opacity="0.15" /* Very subtle */
+          fill="none"
+        />
+        {/* A secondary faint line for depth */}
+        <path
+          d="M -100 250 C 150 450, 350 200, 500 400"
+          stroke="#ff9800"
+          strokeWidth="2"
+          opacity="0.08"
+          fill="none"
+        />
+      </svg>
+
+      {/* --- NEW: RIGHT WAVE (Behind Image Only) --- */}
+      {/* Notice: positioned bottom-right, distinct from the left one */}
+      <svg
         style={{
           position: "absolute",
           bottom: 0,
           right: 0,
-          width: "100%",
-          height: "200px",
+          width: "50vw",
+          height: "60vh",
+          pointerEvents: "none",
+          zIndex: 0,
         }}
-        viewBox="0 0 1440 200"
+        viewBox="0 0 600 500"
         fill="none"
         preserveAspectRatio="none"
       >
+        {/* A curve that wraps under the laptop image */}
         <path
-          d="M0 150 C 400 50, 900 250, 1440 100"
+          d="M 100 500 C 300 200, 500 400, 700 100"
           stroke="#ff9800"
-          strokeWidth="2"
-          strokeDasharray="15 15"
-          opacity="0.4"
-          fill="none"
-        />
-        <path
-          d="M0 200 C 450 100, 950 300, 1440 150"
-          stroke="#ff9800"
-          strokeWidth="2"
-          strokeDasharray="10 10"
-          opacity="0.2"
+          strokeWidth="3"
+          opacity="0.15"
           fill="none"
         />
       </svg>
@@ -95,8 +123,19 @@ export default function LandingPage() {
         </div>
       </div>
 
+      <AboutModal isOpen={isAboutOpen} onClose={() => setAboutOpen(false)} />
+
       {/* 4. FOOTER */}
-      <Footer />
+      <div className={styles.footer}>
+        <p>&copy; 2026 WanderCall. All rights reserved.</p>
+        <p style={{ marginTop: "5px" }}>
+          Made with{" "}
+          <span style={{ color: "#ff9800", fontSize: "1.2rem" }}>♥</span> by{" "}
+          <span style={{ color: "#fff", fontWeight: "bold" }}>
+            Manish Baviskar
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
