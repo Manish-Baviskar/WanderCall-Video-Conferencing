@@ -669,9 +669,64 @@ export default function VideoMeetComponent() {
       }}
     >
       {/* BACKGROUND WAVES (Z-Index 0) */}
-      <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} viewBox="0 0 1440 900" preserveAspectRatio="xMinYMin slice">
-        <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.3" fill="none" />
+      <svg
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "60vw",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+        viewBox="0 0 600 800"
+        fill="none"
+        preserveAspectRatio="none"
+      >
+        {/* A smooth, solid curve that cups the text area */}
+        <path
+          d="M -100 100 C 100 300, 400 0, 600 200"
+          stroke="#ff9800"
+          strokeWidth="3"
+          opacity="0.15" /* Very subtle */
+          fill="none"
+        />
+        {/* A secondary faint line for depth */}
+        <path
+          d="M -100 250 C 150 450, 350 200, 500 400"
+          stroke="#ff9800"
+          strokeWidth="2"
+          opacity="0.08"
+          fill="none"
+        />
       </svg>
+
+      {/* --- NEW: RIGHT WAVE (Behind Image Only) --- */}
+      {/* Notice: positioned bottom-right, distinct from the left one */}
+      <svg
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          width: "50vw",
+          height: "60vh",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+        viewBox="0 0 600 500"
+        fill="none"
+        preserveAspectRatio="none"
+      >
+        {/* A curve that wraps under the laptop image */}
+        <path
+          d="M 100 500 C 300 200, 500 400, 700 100"
+          stroke="#ff9800"
+          strokeWidth="3"
+          opacity="0.15"
+          fill="none"
+        />
+      </svg>
+
 
       {/* MAIN INTERFACE (Z-Index 1) */}
       <div style={{ position: "relative", height: "100%", width: "100%", zIndex: 1, display: "flex", flexDirection: "column" }}>

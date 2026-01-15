@@ -124,6 +124,8 @@ export default function LandingPage() {
             src="/mobile.webp"
             alt="Mobile Video Call"
             className={styles.heroImage}
+            loading="eager"
+            fetchpriority="high"
           />
         </div>
       </div>

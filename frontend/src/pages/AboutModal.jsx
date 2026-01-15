@@ -1,11 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
+// Import your styles to use the hover classes
+import styles from "../styles/landing.module.css"; 
 
 export default function AboutModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -14,16 +15,7 @@ export default function AboutModal({ isOpen, onClose }) {
     <div style={overlayStyle}>
       <div style={modalStyle}>
         {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-            borderBottom: "1px solid #333",
-            paddingBottom: "15px",
-          }}
-        >
+        <div style={headerStyle}>
           <h2 style={{ margin: 0, color: "#ff9800", fontSize: "1.8rem" }}>
             About WanderCall
           </h2>
@@ -33,18 +25,10 @@ export default function AboutModal({ isOpen, onClose }) {
         </div>
 
         {/* Content Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "30px",
-          }}
-        >
+        <div style={gridStyle}>
           {/* Left: Brand Info */}
           <div>
-            <p
-              style={{ color: "#ccc", lineHeight: "1.6", marginBottom: "20px" }}
-            >
+            <p style={{ color: "#ccc", lineHeight: "1.6", marginBottom: "20px" }}>
               Connecting people, anywhere, anytime. Fast, secure, and simple
               video calling for everyone. WanderCall breaks the barriers of
               distance with high-quality, seamless connectivity.
@@ -57,40 +41,20 @@ export default function AboutModal({ isOpen, onClose }) {
 
           {/* Right: Links & Socials */}
           <div>
-            <h3 style={{ color: "white", marginBottom: "10px" }}>
+            <h3 style={{ color: "white", marginBottom: "15px" }}>
               Connect With Us
             </h3>
             <div style={{ display: "flex", gap: "15px", marginBottom: "30px" }}>
-              <a
-                href="https://github.com/Manish-Baviskar"
-                target="_blank"
-                rel="noreferrer"
-                className="socialIcon"
-              >
+              <a href="https://github.com/Manish-Baviskar" target="_blank" rel="noreferrer" className={styles.socialIcon}>
                 <GitHubIcon fontSize="large" />
               </a>
-              <a
-                href="https://www.linkedin.com/in/manishbaviskar/"
-                target="_blank"
-                rel="noreferrer"
-                className="socialIcon"
-              >
+              <a href="https://www.linkedin.com/in/manishbaviskar/" target="_blank" rel="noreferrer" className={styles.socialIcon}>
                 <LinkedInIcon fontSize="large" />
               </a>
-              <a
-                href="https://x.com/_manish_23"
-                target="_blank"
-                rel="noreferrer"
-                className="socialIcon"
-              >
+              <a href="https://x.com/_manish_23" target="_blank" rel="noreferrer" className={styles.socialIcon}>
                 <TwitterIcon fontSize="large" />
               </a>
-              <a
-                href="https://www.instagram.com/manishbaviskar1/"
-                target="_blank"
-                rel="noreferrer"
-                className="socialIcon"
-              >
+              <a href="https://www.instagram.com/manishbaviskar1/" target="_blank" rel="noreferrer" className={styles.socialIcon}>
                 <InstagramIcon fontSize="large" />
               </a>
             </div>
@@ -98,25 +62,20 @@ export default function AboutModal({ isOpen, onClose }) {
             <h3 style={{ color: "white", marginBottom: "10px" }}>
               Quick Links
             </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <a href="/auth" style={linkStyle}>
-                Login / Register
-              </a>
-              <a
-                href="https://github.com/Manish-Baviskar/WanderCall-Video-Conferencing"
-                target="_blank"
-                rel="noreferrer"
-                style={linkStyle}
-              >
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <a href="/auth" style={linkStyle} className={styles.footerLink}>Login / Register</a>
+              <a href="https://github.com/Manish-Baviskar/WanderCall-Video-Conferencing" target="_blank" rel="noreferrer" style={linkStyle} className={styles.footerLink}>
                 Project Source Code
               </a>
-              <a
-                href="https://github.com/Manish-Baviskar/WanderCall-Video-Conferencing/blob/main/LICENSE"
-                style={linkStyle}
+              {/* MIT License Link */}
+              <a 
+                href="https://github.com/Manish-Baviskar/WanderCall-Video-Conferencing/blob/main/LICENSE" 
+                target="_blank" 
+                rel="noreferrer" 
+                style={linkStyle} 
+                className={styles.footerLink}
               >
-                Privacy Policy
+                Privacy Policy (MIT License)
               </a>
             </div>
           </div>
@@ -126,7 +85,22 @@ export default function AboutModal({ isOpen, onClose }) {
   );
 }
 
-// --- Styles Object (Inline for simplicity) ---
+// --- Styles Objects ---
+const headerStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "20px",
+  borderBottom: "1px solid #333",
+  paddingBottom: "15px",
+};
+
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: "30px",
+};
+
 const overlayStyle = {
   position: "fixed",
   top: 0,
@@ -154,7 +128,6 @@ const modalStyle = {
   fontFamily: '"Poppins", sans-serif',
 };
 
-const iconStyle = { color: "#aaa", transition: "0.3s", cursor: "pointer" };
 const linkStyle = {
   color: "#ff9800",
   textDecoration: "none",

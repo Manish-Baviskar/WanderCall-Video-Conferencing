@@ -205,14 +205,20 @@
     .imageSection { justify-content: center; }
 }
 
+/* Glow for Social Icons */
 .socialIcon {
-    color: #aaa;
+    color: #aaa !important; /* Base Grey */
     transition: all 0.3s ease-in-out;
-    cursor: pointer;
 }
 
 .socialIcon:hover {
-    color: #ff9800 !important; /* Change to Orange */
-    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8)); /* The Glow */
-    transform: translateY(-3px); /* Subtle lift */
+    color: #ff9800 !important; /* Theme Orange */
+    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8)); /* Glow */
+    transform: translateY(-3px); /* Subtle Lift */
+}
+
+/* Glow for Quick Links */
+.footerLink:hover {
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+    text-decoration: underline !important;
 }
