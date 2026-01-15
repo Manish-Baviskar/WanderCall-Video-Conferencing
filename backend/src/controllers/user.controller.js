@@ -110,25 +110,29 @@ const addToHistory = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // 1. Check if this meeting already exists in the database
-        let meeting = await Meeting.findOne({ meetingCode: meeting_code });
+        // --- NEW: SANITIZATION LOGIC ---
+        // If the code is a full URL (contains "/"), take only the last part.
+        // If it's already just a code (e.g., "abc"), it stays "abc".
+        const cleanMeetingCode = meeting_code.includes("/") 
+            ? meeting_code.split("/").pop() 
+            : meeting_code;
+        // -------------------------------
 
-        // 2. If NOT, create a brand new meeting
+        // Use 'cleanMeetingCode' everywhere below instead of 'meeting_code'
+        let meeting = await Meeting.findOne({ meetingCode: cleanMeetingCode });
+
         if (!meeting) {
             meeting = new Meeting({
-                meetingCode: meeting_code,
+                meetingCode: cleanMeetingCode,
                 attendees: []
             });
         }
 
-        // 3. Add this user to the meeting's "Attendee List" (if not already there)
         if (!meeting.attendees.includes(user._id)) {
             meeting.attendees.push(user._id);
             await meeting.save();
         }
 
-        // 4. Add this meeting to the User's personal "History" 
-        // ($addToSet ensures we don't duplicate the same meeting ID)
         await User.findByIdAndUpdate(user._id, { 
             $addToSet: { history: meeting._id } 
         });
