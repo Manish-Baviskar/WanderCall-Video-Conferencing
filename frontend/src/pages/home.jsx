@@ -130,7 +130,19 @@ function HomeComponent() {
                                 onChange={e => setMeetingCode(e.target.value)}
                                 className={styles.inputField}
                             />
-                            <Button variant="contained" className={styles.joinBtn} onClick={handleJoinVideoCall}>
+                            <Button variant="contained" onClick={handleJoinVideoCall} sx={{
+                                    bgcolor: '#ff9800',
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    borderRadius: '12px',
+                                    padding: '0 30px',
+                                    height: '55px',
+                                    whiteSpace: 'nowrap',
+                                    '&:hover': {
+                                        bgcolor: '#e68a00',
+                                        boxShadow: '0 0 15px rgba(255, 152, 0, 0.4)'
+                                    }
+                                }}>
                                 Join
                             </Button>
                         </div>
@@ -138,9 +150,20 @@ function HomeComponent() {
                         <Button
                             variant="outlined"
                             fullWidth
-                            className={styles.createBtn}
                             onClick={handleCreateNewMeeting}
                             startIcon={<AddBoxIcon />}
+                            sx={{
+                                color: '#ff9800',
+                                borderColor: '#ff9800',
+                                fontWeight: 'bold',
+                                borderRadius: '12px',
+                                padding: '15px',
+                                borderWidth: '2px', // Thicker border
+                                '&:hover': {
+                                    borderColor: '#ff9800',
+                                    bgcolor: 'rgba(255, 152, 0, 0.1)'
+                                }
+                            }}
                         >
                             Create New Meeting
                         </Button>
@@ -165,6 +188,9 @@ function HomeComponent() {
 
             <div className={styles.simpleFooter}>
                 <p>&copy; 2026 WanderCall. All rights reserved.</p>
+                <p style={{ marginTop: '5px', fontSize: '0.9rem', color: '#666' }}>
+                    Made with <span style={{ color: '#ff9800', fontSize: '1.2rem' }}>♥</span> by <span style={{ color: '#fff', fontWeight: 'bold' }}>Manish Baviskar</span>
+                </p>
             </div>
 
         </div>

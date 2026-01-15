@@ -18,10 +18,12 @@
 }
 
 .patternTop {
-    top: 0;
-    left: 0;
-    width: 60%;
-    max-width: 600px;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-100%, -100%); /* Moves it to start from center */
+    width: 600px;
+    margin-top: -100px; /* Fine tune position upwards */
+    margin-left: -100px; /* Fine tune position leftwards */
 }
 
 .patternBottom {
@@ -41,7 +43,7 @@
 }
 
 .navHeader h2 {
-    color: white;
+    color: #ffa500;
     margin: 0;
     font-weight: 700;
     letter-spacing: 1px;
@@ -98,7 +100,7 @@
     border: 1px solid rgba(255, 152, 0, 0.3);
 
     /* UPDATED: Stronger Glow Effect */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 152, 0, 0.2); 
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 152, 0, 0.28); 
     
     display: flex;
     padding: 60px;
@@ -141,19 +143,21 @@
 
 /* Custom Input Styling */
 .inputField .MuiOutlinedInput-root {
-    background-color: #1a1a1a;
-    color: white;
+    background-color: #1e1e1e !important; /* Lighter than black */
+    color: white !important;
     border-radius: 12px;
     height: 55px;
+    border: 1px solid #444; /* Visible border */
 }
 .inputField .MuiOutlinedInput-notchedOutline {
-    border-color: #444;
+    border-color: none;
 }
 .inputField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
     border-color: #777;
 }
 .inputField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #ff9800;
+    box-shadow: 0 0 0 1px #ff9800;
 }
 
 /* BUTTONS */
@@ -192,12 +196,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle, rgba(255,152,0,0.1) 0%, rgba(0,0,0,0) 70%);
+    background: radial-gradient(circle, rgba(255,152,0,0.06) 0%, rgba(0,0,0,0) 70%);
     border-radius: 20px;
 }
 
 .cardImageSection img {
-    width: 120px;
+    width: 100%;
+    max-width: 320px;
     height: auto;
     filter: drop-shadow(0 0 20px rgba(255,152,0,0.4));
 }
