@@ -201,14 +201,25 @@ function HomeComponent() {
             {/* BACKGROUND PATTERNS (Restored!) */}
             <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
     
-    {/* Line 1 - The outermost line */}
-    <path d="M-10 100 Q 300 100, 550 350" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    {/* Wave 1: Darker, sharper curve */}
+    <path 
+        d="M-50 200 Q 400 250, 700 600" 
+        stroke="#ff9800" 
+        strokeWidth="2" 
+        strokeDasharray="10 10" 
+        opacity="0.6" /* Darker */
+        fill="none"
+    />
     
-    {/* Line 2 - The middle line */}
-    <path d="M-10 150 Q 280 150, 500 400" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
-    
-    {/* Line 3 - The inner line (closest to card) */}
-    <path d="M-10 200 Q 260 200, 450 450" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    {/* Wave 2: Faded, wider curve (Not parallel) */}
+    <path 
+        d="M-50 150 Q 550 200, 850 700" 
+        stroke="#ff9800" 
+        strokeWidth="2" 
+        strokeDasharray="10 10" 
+        opacity="0.2" /* Little Fade */
+        fill="none"
+    />
 
 </svg>
 

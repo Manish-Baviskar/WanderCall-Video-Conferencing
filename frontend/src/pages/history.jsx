@@ -62,7 +62,7 @@ export default function History() {
     }
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#0a0a23', paddingBottom: '50px' }}>
+        <div className={`${styles.goldenGlass}`} style={{ minHeight: '100vh', backgroundColor: '#0a0a23', paddingBottom: '50px' }}>
             
             {/* Header */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, p: 3, borderBottom: '1px solid #333', bgcolor: '#1a1a2e' }}>
