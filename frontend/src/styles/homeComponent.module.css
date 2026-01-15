@@ -1,37 +1,36 @@
-/* MAIN WRAPPER: Black Background */
+/* MAIN WRAPPER: Premium Gradient Background */
 .homeWrapper {
-    background-color: #000000;
+    /* The Gradient from Landing Page */
+    background: radial-gradient(circle at top left, #1a1a1a, #000000);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
     color: white;
-    position: relative; /* Needed for pattern positioning */
-    overflow: hidden;   /* Stops patterns from creating scrollbars */
+    position: relative; 
+    overflow: hidden;   
 }
 
 /* BACKGROUND PATTERNS (The Orange Waves) */
 .pattern {
     position: absolute;
-    z-index: 0; /* Behind everything */
-    opacity: 0.6;
+    z-index: 0; 
+    /* removed opacity: 0.6 so the SVG controls its own subtlety */
+    pointer-events: none;
 }
 
 .patternCorner {
     top: 0;
     left: 0;
-    width: 100vw;  /* Must span full width */
-    height: 100vh; /* Must span full height */
-    z-index: 0;
-    pointer-events: none;
-    position: absolute; /* Crucial */
+    width: 60vw; /* Matches Landing Page Left Wave width */
+    height: 100%; 
 }
 
 .patternBottom {
     bottom: 0;
     right: 0;
-    width: 70%;
-    max-width: 700px;
+    width: 50vw; /* Matches Landing Page Right Wave width */
+    height: 60vh;
 }
 
 /* NAVBAR */
@@ -40,7 +39,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 25px 50px;
-    z-index: 10; /* Above patterns */
+    z-index: 10; 
+    /* Optional: Make navbar transparent to let gradient show */
+    background: transparent; 
 }
 
 .navHeader h2 {
@@ -56,17 +57,18 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background-color: rgba(255, 152, 0, 0.15); /* Glassy Orange */
+    background-color: rgba(255, 152, 0, 0.1); /* Lighter Glass */
     border: 1px solid #ff9800;
     padding: 6px 6px 6px 20px;
     border-radius: 50px;
     cursor: pointer;
     transition: 0.3s;
+    backdrop-filter: blur(5px);
 }
 
 .accountPill:hover {
     background-color: #ff9800;
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6);
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.4);
 }
 
 .accountPill:hover .userName {
@@ -87,27 +89,29 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    z-index: 5; /* Above patterns */
+    z-index: 5; 
 }
 
-/* THE CARD */
+/* THE CARD (Updated to Glassmorphism) */
 .card {
-    background: #0a0a0a;
+    /* Glass Effect (Instead of Solid Black) */
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(15px); /* Strong blur */
+    
     width: 100%;
     max-width: 1050px;
     border-radius: 24px;
     
-    /* ADDED: A visible orange border */
-    border: 1px solid rgba(255, 152, 0, 0.3);
+    /* Subtle Orange Border */
+    border: 1px solid rgba(255, 152, 0, 0.2);
 
-    /* UPDATED: Stronger Glow Effect */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 152, 0, 0.28); 
+    /* Deep Premium Shadow */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 152, 0, 0.1); 
     
     display: flex;
     padding: 60px;
     gap: 60px;
     position: relative;
-    backdrop-filter: blur(10px);
 }
 
 /* LEFT SIDE */
@@ -119,20 +123,26 @@
 }
 
 .cardActions h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin-bottom: 10px;
+    font-size: 3rem; /* Bigger Title */
+    line-height: 1.1;
+    margin-bottom: 15px;
     color: white;
+    font-weight: 800;
 }
 
 .accentText {
-    color: #ff9800;
+    /* Gradient Text */
+    background: linear-gradient(90deg, #ff9800, #ffc107);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .cardActions p {
-    color: #999;
+    color: #aaa;
     margin-bottom: 35px;
     font-size: 1.1rem;
+    line-height: 1.6;
 }
 
 /* JOIN SECTION */
@@ -142,28 +152,21 @@
     margin-bottom: 25px;
 }
 
-/* Custom Input Styling */
+/* INPUTS */
 .inputField .MuiOutlinedInput-root {
-    background-color: #1e1e1e !important; /* Lighter than black */
+    background-color: rgba(0, 0, 0, 0.3) !important; /* Semi-transparent */
     color: white !important;
     border-radius: 12px;
     height: 55px;
-    border: 1px solid #444; /* Visible border */
-}
-.inputField .MuiOutlinedInput-notchedOutline {
-    border-color: none;
-}
-.inputField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #777;
+    border: 1px solid rgba(255, 255, 255, 0.1); 
 }
 .inputField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #ff9800;
-    box-shadow: 0 0 0 1px #ff9800;
 }
 
 /* BUTTONS */
 .joinBtn.MuiButton-root {
-    background-color: #ff9800 !important; /* !important stops it from turning Blue */
+    background-color: #ff9800 !important;
     color: black !important;
     font-weight: 700;
     border-radius: 12px;
@@ -173,46 +176,51 @@
 }
 
 .joinBtn.MuiButton-root:hover {
-    background-color: #ffac33 !important;
-    box-shadow: 0 0 15px rgba(255, 152, 0, 0.4);
+    background-color: #e68a00 !important;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.4);
+    transform: translateY(-2px);
 }
 
 .createBtn.MuiButton-root {
     background-color: transparent !important;
-    color: #ff9800 !important; /* Orange Text */
-    border: 1px solid #ff9800 !important; /* Solid Orange Border */
+    color: #ff9800 !important;
+    border: 1px solid #ff9800 !important;
     font-weight: 600;
     border-radius: 12px;
     padding: 15px;
     font-size: 1rem;
 }
-.createBtn.MuiButton-root:hover {
-    background-color: rgba(255, 152, 0, 0.1) !important;
-    box-shadow: 0 0 15px rgba(255, 152, 0, 0.2);
-}
 
-/* RIGHT SIDE (LOGO AREA) */
+/* RIGHT SIDE (LOGO) */
 .cardImageSection {
     flex: 0.8;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle, rgba(255,152,0,0.06) 0%, rgba(0,0,0,0) 70%);
-    border-radius: 20px;
+    /* Removed the square background for a cleaner look */
+    background: transparent;
 }
 
 .cardImageSection img {
     width: 100%;
     max-width: 320px;
     height: auto;
-    filter: drop-shadow(0 0 20px rgba(255,152,0,0.4));
+    /* Soft Glow behind image */
+    filter: drop-shadow(0 0 30px rgba(255,152,0,0.2));
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
 }
 
 /* FOOTER */
 .simpleFooter {
     text-align: center;
     padding: 20px;
-    color: #444;
+    color: #555;
     font-size: 0.85rem;
     z-index: 10;
 }
@@ -221,14 +229,12 @@
 @media (max-width: 900px) {
     .card {
         flex-direction: column-reverse;
-        padding: 40px;
+        padding: 30px;
         gap: 30px;
         text-align: center;
     }
     .joinSection {
         flex-direction: column;
     }
-    .cardImageSection {
-        padding: 20px;
-    }
+    .cardActions h1 { font-size: 2.2rem; }
 }

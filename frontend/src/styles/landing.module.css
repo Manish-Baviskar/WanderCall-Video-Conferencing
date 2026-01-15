@@ -31,10 +31,21 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 60px;
-    position: relative; 
+    
+    /* FIX: Change from Solid Black to Transparent */
+    background: transparent; 
+    
+    /* Optional: Add a subtle blur if you want it to feel like glass */
+    /* backdrop-filter: blur(5px); */
+    
+    position: absolute; /* Sits ON TOP of the background/waves */
+    top: 0;
+    left: 0;
+    width: 100%;
     z-index: 100;
-    background-color: #000000; /* Solid Black */
-    border-bottom: 1px solid rgba(255, 152, 0, 0.1); /* Subtle divider */
+    
+    /* Remove the border so it blends perfectly */
+    border-bottom: none; 
 }
 
 .landingWave {
@@ -186,6 +197,9 @@
     }
     .textSection h1 { font-size: 3rem; }
     .textSection p { margin: 0 auto 40px auto; }
+    .navbar {
+        padding: 20px;
+    }
     .navlist { display: none; } /* Hide nav links on mobile */
     .heroImage { max-width: 350px; margin-bottom: 40px; }
     .imageSection { justify-content: center; }

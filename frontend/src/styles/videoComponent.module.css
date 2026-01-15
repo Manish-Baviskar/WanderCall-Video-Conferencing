@@ -1,189 +1,137 @@
-/* --- CONTAINER RESETS (To let Glass show through) --- */
+/* --- 1. MAIN WRAPPER (Locked to Screen) --- */
 .meetVideoContainer {
     position: relative;
-    height: 100%; /* Changed from 100vh to 100% to fit wrapper */
-    width: 100%;
-    background: transparent; /* IMPORTANT: Transparent so waves show */
-    overflow: hidden;
+    height: 100vh; /* FULL SCREEN */
+    width: 100vw;
+    background: radial-gradient(circle at top left, #1a1a1a, #000000); /* Matches Theme */
+    overflow: hidden; /* Prevents whole page scroll */
     display: flex;
     flex-direction: column;
 }
 
-.lobbyContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%; /* Fit wrapper */
-    min-height: 80vh;
-    background: transparent; /* Transparent */
-    color: white;
-    text-align: center;
-    gap: 30px;
-    z-index: 10;
-}
-
-/* --- VIDEO STYLING --- */
-.meetUserVideo {
-    /* If you use the grid layout, these positions are overridden, which is good. */
-    /* If you use absolute positioning (Picture in Picture), this applies: */
-    border-radius: 20px;
-    border: 2px solid #ff9800; /* Orange Border */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    object-fit: cover;
-    background: black;
-}
-
+/* --- 2. SCROLLABLE VIDEO GRID --- */
 .conferenceView {
+    flex: 1; /* Takes all available space */
+    
+    /* ENABLE INTERNAL SCROLLING */
+    overflow-y: auto; 
+    overflow-x: hidden;
+    
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Aligns videos to top */
+    align-content: flex-start; /* Prevents huge gaps */
+    
     padding: 20px;
+    padding-bottom: 100px; /* Space for the bottom controls */
     gap: 20px;
-    height: 100%;
-    overflow-y: auto; 
+
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #ff9800 #1a1a1a;
 }
 
-/* --- BUTTONS & CONTROLS --- */
+/* Chrome Scrollbar */
+.conferenceView::-webkit-scrollbar { width: 8px; }
+.conferenceView::-webkit-scrollbar-track { background: #1a1a1a; }
+.conferenceView::-webkit-scrollbar-thumb { background-color: #ff9800; border-radius: 20px; }
+
+/* --- 3. VIDEO CARD STYLING --- */
+.meetUserVideo {
+    /* Responsive sizing for grid */
+    height: 300px; 
+    width: 400px;
+    
+    border-radius: 12px;
+    border: 2px solid rgba(255, 152, 0, 0.3); /* Subtle Orange */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    object-fit: cover;
+    background: black;
+    
+    flex-shrink: 0; /* Prevents squishing */
+    transition: 0.3s;
+}
+
+.meetUserVideo:hover {
+    border-color: #ff9800;
+    transform: scale(1.02);
+}
+
+/* --- 4. FIXED BOTTOM CONTROLS --- */
 .buttonContainers {
-    /* Note: The JSX handles the fixed positioning now, 
-       but this class handles the responsiveness */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    
+    background: rgba(0, 0, 0, 0.85); /* Dark Glass */
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 152, 0, 0.2);
+    
     display: flex;
     justify-content: center;
-    gap: 15px; 
+    align-items: center;
+    gap: 20px;
+    
+    z-index: 50; /* Stays on top of videos */
 }
 
-.buttonContainers svg {
-    font-size: 2.5rem; 
-}
-
-/* --- ANIMATIONS & INTERACTION --- */
-.animateBtn {
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
-    cursor: pointer !important;
-}
-
-/* Updated to ORANGE Theme */
-.primaryBtn {
-    background-color: #ff9800 !important; /* Orange */
-    color: black !important;
-    font-weight: bold !important;
-    border-radius: 25px !important;
-    padding: 10px 30px !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    text-transform: none !important;
-    font-size: 1.1rem !important;
-}
-
-.primaryBtn:hover {
-    background-color: #e68a00 !important; /* Darker Orange */
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6); /* Golden Glow */
-}
-
-/* Glassy Control Icons */
+/* --- BUTTON STYLES (Kept your existing premium look) --- */
 .controlIcon {
     background-color: rgba(255, 255, 255, 0.1) !important; 
     backdrop-filter: blur(5px);
     padding: 12px !important; 
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    transition: all 0.2s ease !important;
 }
 
 .controlIcon:hover {
-    background-color: rgba(255, 152, 0, 0.8) !important; /* Orange on hover */
+    background-color: #ff9800 !important; 
     color: black !important;
-    transform: scale(1.15); 
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6); 
-    border: 1px solid #ff9800 !important;
+    transform: translateY(-5px); 
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.5); 
+    border-color: #ff9800 !important;
 }
 
 .endCallBtn {
-    background-color: rgba(220, 53, 69, 0.8) !important; 
+    background-color: rgba(220, 53, 69, 0.9) !important; 
     padding: 12px !important;
     border: 1px solid rgba(255, 0, 0, 0.3) !important;
 }
 
 .endCallBtn:hover {
     background-color: rgb(255, 0, 0) !important;
-    transform: scale(1.2);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.8); 
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); 
 }
 
-/* --- CHAT ROOM (Dark Theme Update) --- */
-.chatRoom {
-    position: absolute;
-    height: 75vh; 
-    top: 10vh;
-    right: 20px;
-    
-    /* Dark Glass Styling */
-    background: rgba(20, 20, 20, 0.85) !important; 
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 152, 0, 0.3); /* Orange Border */
-    color: white !important;
-    
-    border-radius: 15px;
-    width: 30vw;
-    min-width: 300px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    z-index: 30;
-    display: flex;    
-    flex-direction: column;
-}
-
-.chatContainer {
-    position: relative;
-    height: 100%;
+/* --- LOBBY STYLES (Kept mostly same) --- */
+.lobbyContainer {
     display: flex;
     flex-direction: column;
-}
-
-.chattingDisplay {
-    flex-grow: 1; 
-    overflow-y: auto;
-    margin-bottom: 20px; 
-    padding-right: 5px;
-}
-
-/* Scrollbar for chat */
-.chattingDisplay::-webkit-scrollbar {
-    width: 5px;
-}
-.chattingDisplay::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 5px;
-}
-
-.chattingArea {
-    width: 100%;
-    display: flex;
-    gap: 10px;
-    background: transparent;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* --- LOBBY ELEMENTS --- */
-.lobbyForm {
-    display: flex;
     align-items: center;
-    gap: 20px; 
-    margin-bottom: 20px;
-    z-index: 20;
+    justify-content: center;
+    height: 100%; 
+    background: transparent;
+    color: white;
+    text-align: center;
+    gap: 30px;
+    z-index: 10;
 }
 
 .videoPreviewContainer {
     position: relative;
-    width: 500px; 
+    width: 600px; /* Slightly bigger for desktop */
     max-width: 90vw;
-    height: 375px; 
+    aspect-ratio: 16/9;
     background: black;
     border-radius: 20px;
     overflow: hidden;
-    border: 2px solid rgba(255, 152, 0, 0.5); /* Orange Border */
-    box-shadow: 0 0 40px rgba(255, 152, 0, 0.15);
+    border: 1px solid #ff9800;
+    box-shadow: 0 0 50px rgba(255, 152, 0, 0.1);
 }
 
 .videoPreviewContainer video {
@@ -193,33 +141,61 @@
     transform: scaleX(-1); 
 }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 768px) {
-    .chatRoom {
-        width: 90vw; 
-        right: 5vw; 
-        height: 60vh;
-        top: 15vh;
-    }
+/* --- CHAT ROOM (Matches New Theme) --- */
+.chatRoom {
+    position: absolute;
+    height: 70vh; 
+    top: 10vh;
+    right: 20px;
+    background: rgba(10, 10, 10, 0.95) !important; 
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    color: white !important;
+    border-radius: 15px;
+    width: 350px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    z-index: 100; /* Higher than controls */
+    display: flex;    
+    flex-direction: column;
+}
 
-    .buttonContainers {
-        width: 90%;
-        padding: 10px;
-        bottom: 20px;
+.chatContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chattingDisplay {
+    flex-grow: 1; 
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.chattingArea {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .meetUserVideo {
+        width: 100%; /* Full width on mobile */
+        height: auto;
+        aspect-ratio: 4/3;
     }
     
-    .buttonContainers svg {
-        font-size: 1.8rem;
+    .buttonContainers {
+        padding: 0 10px;
+        gap: 10px;
     }
-
-    .lobbyForm {
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
-
-    .videoPreviewContainer {
-        height: 300px; 
+    
+    .chatRoom {
         width: 90vw;
+        right: 5vw;
+        height: 60vh;
     }
 }
