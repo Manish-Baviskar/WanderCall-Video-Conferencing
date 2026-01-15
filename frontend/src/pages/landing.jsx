@@ -121,7 +121,7 @@ export default function LandingPage() {
         {/* Right Side: Image */}
         <div className={styles.imageSection}>
           <img
-            src="/mobile.svg"
+            src="/mobile.webp"
             alt="Mobile Video Call"
             className={styles.heroImage}
           />
