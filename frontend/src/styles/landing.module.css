@@ -28,9 +28,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 60px; /* More breathing room */
+    padding: 20px 60px;
     position: relative; 
     z-index: 100;
+    background-color: #000000; /* Solid Black */
+    border-bottom: 1px solid rgba(255, 152, 0, 0.1); /* Subtle divider */
+}
+
+.landingWave {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .navHeader h2 {

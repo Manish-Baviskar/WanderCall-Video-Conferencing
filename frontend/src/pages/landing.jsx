@@ -14,13 +14,14 @@ export default function LandingPage() {
         <div className={styles.landingWrapper}>
             
             {/* 1. BACKGROUND WAVES (Same as Home) */}
-            <svg className={styles.patternCorner} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
-                <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.7" fill="none" />
-                <path d="M-50 100 Q 450 150, 750 500" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.4" fill="none" />
+            <svg className={styles.landingWave} style={{top: 0, left: 0, width: '100%', height: '400px'}} viewBox="0 0 1440 400" fill="none" preserveAspectRatio="none">
+                 <path d="M-100 50 Q 600 250, 1540 50" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" opacity="0.3" fill="none"/>
+                 <path d="M-100 150 Q 600 350, 1540 150" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.15" fill="none"/>
             </svg>
 
-            <svg style={{ position: 'absolute', bottom: 0, right: 0, width: '500px', height: '300px', zIndex: 0, pointerEvents: 'none' }} viewBox="0 0 500 300" fill="none">
-                 <path d="M490 10 C 350 250, 150 50, 10 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+            {/* Bottom Wave: A Wide Rising Curve */}
+            <svg className={styles.landingWave} style={{bottom: 0, right: 0, width: '100%', height: '300px'}} viewBox="0 0 1440 300" fill="none" preserveAspectRatio="none">
+                 <path d="M0 300 C 400 100, 1000 50, 1440 250" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" opacity="0.3" fill="none"/>
             </svg>
 
             {/* 2. NAVBAR */}
