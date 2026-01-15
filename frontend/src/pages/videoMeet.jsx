@@ -507,6 +507,8 @@ useEffect(() => {
         tracks.forEach(track => track.stop())
     } catch (e) { }
 
+    markLeave();
+
     setTimeout(() => {
         if (localStorage.getItem("token")) {
             window.location.href = "/home";
