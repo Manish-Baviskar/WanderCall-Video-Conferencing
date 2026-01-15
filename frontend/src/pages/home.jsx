@@ -133,7 +133,7 @@ function HomeComponent() {
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         color: 'white', 
-                                        bgcolor: '#2c2c2c',  // Much lighter grey so it's visible
+                                        bgcolor: '#1a1a1a',  // Much lighter grey so it's visible
                                         borderRadius: '12px',
                                         '& fieldset': { 
                                             borderColor: '#666', // Visible Grey Border
