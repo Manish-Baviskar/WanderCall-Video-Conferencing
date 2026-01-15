@@ -204,3 +204,15 @@
     .heroImage { max-width: 350px; margin-bottom: 40px; }
     .imageSection { justify-content: center; }
 }
+
+.socialIcon {
+    color: #aaa;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.socialIcon:hover {
+    color: #ff9800 !important; /* Change to Orange */
+    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8)); /* The Glow */
+    transform: translateY(-3px); /* Subtle lift */
+}
