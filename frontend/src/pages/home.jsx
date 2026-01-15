@@ -199,15 +199,17 @@ function HomeComponent() {
             </div>
 
             {/* BACKGROUND PATTERNS (Restored!) */}
-            <svg className={`${styles.pattern} ${styles.patternLeft}`} viewBox="0 0 400 400" fill="none">
-    {/* Line 1 */}
-    <path d="M-50 100 Q 150 50, 350 200" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+            <svg className={`${styles.pattern} ${styles.patternCorner}`} viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMinYMin slice">
     
-    {/* Line 2 (Parallel-ish) */}
-    <path d="M-50 150 Q 150 100, 350 250" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    {/* Line 1 - The outermost line */}
+    <path d="M-10 100 Q 300 100, 550 350" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
     
-    {/* Line 3 */}
-    <path d="M-50 200 Q 150 150, 350 300" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    {/* Line 2 - The middle line */}
+    <path d="M-10 150 Q 280 150, 500 400" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+    
+    {/* Line 3 - The inner line (closest to card) */}
+    <path d="M-10 200 Q 260 200, 450 450" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none"/>
+
 </svg>
 
             <svg className={`${styles.pattern} ${styles.patternBottom}`} width="500" height="300" viewBox="0 0 500 300" fill="none">

@@ -17,15 +17,16 @@
     opacity: 0.6;
 }
 
-.patternLeft {
-    top: 40%;         /* Vertically centered */
+.patternCorner {
+    top: 0;
     left: 0;
-    width: 400px;     /* Wide enough to reach the card */
-    height: 400px;
-    transform: translate(-40%, -50%) rotate(10deg); /* Positioned on the edge */
+    width: 100vw;  /* Stretch across the screen width */
+    height: 100vh; /* Stretch across the screen height */
     z-index: 0;
+    opacity: 0.4;  /* Slightly more visible */
+    pointer-events: none;
+    transform: none; /* Reset any previous rotation to keep it simple */
 }
-
 .patternBottom {
     bottom: 0;
     right: 0;
