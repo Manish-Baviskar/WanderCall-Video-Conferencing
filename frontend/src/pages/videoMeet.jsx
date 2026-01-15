@@ -66,18 +66,28 @@ export default function VideoMeetComponent() {
     const markLeave = async () => {
     try {
         if (localStorage.getItem("token")) {
+            
+            // 1. CLEAN THE URL (Fixes the Host Bug)
+            // This removes any trailing slash (e.g. "url/" becomes "url") 
+            // so the backend always gets the correct code.
+            let currentUrl = window.location.href;
+            if (currentUrl.endsWith("/")) {
+                currentUrl = currentUrl.slice(0, -1);
+            }
+
             const data = {
                 token: localStorage.getItem("token"),
-                meeting_code: window.location.href
+                meeting_code: currentUrl
             };
 
+            // 2. Send with keepalive (Fixes the "Laggy" feel)
             await fetch(`${server_url}/api/v1/users/update_leave_time`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
-                keepalive: true // <--- This does the magic!
+                keepalive: true 
             });
         }
     } catch (e) {
@@ -590,7 +600,7 @@ export default function VideoMeetComponent() {
         borderBottom: '1px solid #ddd' // Light gray divider
     }}>
         <h1 style={{ margin: 0, fontSize: '1.2rem', color: 'black' }}>Chat</h1>
-        <IconButton onClick={closeChat} style={{ color: 'white' }}>
+        <IconButton onClick={closeChat} style={{ color: 'black' }}>
             <CloseIcon />
         </IconButton>
     </div>
