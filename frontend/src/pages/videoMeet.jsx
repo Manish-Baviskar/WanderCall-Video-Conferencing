@@ -67,18 +67,21 @@ export default function VideoMeetComponent() {
     try {
         if (localStorage.getItem("token")) {
             
-            // 1. Get the path (e.g., "/abc" or "/abc/")
-            let path = window.location.pathname;
-            
-            // 2. Remove trailing slash if it exists (CRITICAL STEP)
-            path = path.replace(/\/$/, ""); 
-            
-            // 3. Now getting the last part is 100% safe
-            const cleanCode = path.split("/").pop();
+            // ROBUST URL EXTRACTION
+            // Handles "/room", "/room/", and "/path/to/room"
+            const segments = window.location.pathname.split('/').filter(Boolean);
+            const cleanCode = segments.pop(); 
+
+            if (!cleanCode) {
+                console.log("Could not extract meeting code");
+                return;
+            }
+
+            console.log("LEAVING MEETING:", cleanCode); 
 
             const data = {
                 token: localStorage.getItem("token"),
-                meeting_code: cleanCode // Sends "7dlxnx" perfectly every time
+                meeting_code: cleanCode
             };
 
             await fetch(`${server_url}/api/v1/users/update_leave_time`, {
