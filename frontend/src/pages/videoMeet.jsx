@@ -660,150 +660,85 @@ export default function VideoMeetComponent() {
  return (
     <div
       style={{
-        height: "100vh", // Fixed height
+        height: "100vh",
         width: "100vw",
-        background: "radial-gradient(circle at top left, #1a1a1a, #000000)",
+        background: "radial-gradient(circle at top left, #1a1a1a, #000000)", // Fixed Gradient
         position: "relative",
-        overflow: "hidden", // Disable outer scroll
+        overflow: "hidden",
         fontFamily: "Poppins, sans-serif",
       }}
     >
-      {/* 1. BACKGROUND WAVES */}
-      <svg
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMinYMin slice"
-      >
-        <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.7" fill="none" />
-        <path d="M-50 100 Q 450 150, 750 500" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.4" fill="none" />
+      {/* BACKGROUND WAVES (Z-Index 0) */}
+      <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} viewBox="0 0 1440 900" preserveAspectRatio="xMinYMin slice">
+        <path d="M-50 250 Q 300 300, 600 650" stroke="#ff9800" strokeWidth="2" strokeDasharray="10 10" opacity="0.3" fill="none" />
       </svg>
 
-      <svg
-        style={{
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-          width: "500px",
-          height: "300px",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-        viewBox="0 0 500 300"
-        fill="none"
-      >
-        <path d="M490 10 C 350 250, 150 50, 10 290" stroke="#ff9800" strokeWidth="2" strokeDasharray="15 15" fill="none" />
-      </svg>
-
-      {/* 2. MAIN INTERFACE OVERLAY */}
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-          width: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          backdropFilter: "blur(20px)",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      {/* MAIN INTERFACE (Z-Index 1) */}
+      <div style={{ position: "relative", height: "100%", width: "100%", zIndex: 1, display: "flex", flexDirection: "column" }}>
+        
         {askForUsername === true ? (
           /* --- LOBBY VIEW --- */
-          <div className={styles.lobbyContainer} style={{ height: "100vh", justifyContent: "center" }}>
-            <h1 style={{ fontSize: "3rem", textShadow: "0 0 20px rgba(255,152,0,0.5)", marginBottom: "20px" }}>
-              Enter Lobby
+          <div className={styles.lobbyContainer} style={{ gap: "40px" }}>
+            <h1 style={{ fontSize: "3.5rem", fontWeight: "800", color: "white" }}>
+               Wander<span style={{color: "#ff9800"}}>Call</span> Lobby
             </h1>
-            <div className={styles.lobbyForm}>
+
+            <div style={{ display: "flex", gap: "20px", alignItems: "center", zIndex: 10 }}>
               <TextField
-                label="Username"
+                label="Display Name"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 variant="outlined"
                 sx={{
+                  width: "300px",
                   "& .MuiOutlinedInput-root": {
                     color: "white",
                     borderRadius: "12px",
                     background: "rgba(255,255,255,0.05)",
-                    "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
-                    "&:hover fieldset": { borderColor: "#ff9800" },
-                    "&.Mui-focused fieldset": { borderColor: "#ff9800" },
+                    "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
                   },
-                  "& .MuiInputLabel-root": { color: "#aaa" },
+                  "& .MuiInputLabel-root": { color: "#888" },
                 }}
               />
-              <Button variant="contained" onClick={connect} disabled={isConnecting} className={styles.primaryBtn}>
-                {isConnecting ? "Joining..." : "Connect"}
+              <Button 
+                variant="contained" 
+                onClick={connect} 
+                disabled={isConnecting}
+                style={{
+                  background: "#ff9800", // Forced Orange
+                  color: "black",
+                  height: "56px",
+                  padding: "0 40px",
+                  borderRadius: "12px",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  fontSize: "1.1rem"
+                }}
+              >
+                {isConnecting ? "Joining..." : "Join Meeting"}
               </Button>
             </div>
+
             <div className={styles.videoPreviewContainer}>
-              <video ref={localVideoref} autoPlay muted style={{ width: "100%", height: "100%", objectFit: "cover" }}></video>
+              <video ref={localVideoref} autoPlay muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
             </div>
           </div>
         ) : (
           /* --- MEETING VIEW --- */
           <>
-            {/* 3. SCROLLABLE VIDEO GRID */}
-            <div
-              style={{
-                flex: 1, // Fills space between top and bottom
-                overflowY: "auto", // SCROLL ENABLED HERE
-                padding: "40px 20px 120px 20px", // Bottom padding for controls
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "flex-start",
-                gap: "20px",
-                scrollbarWidth: "thin",
-                scrollbarColor: "#ff9800 transparent",
-              }}
-            >
-              {/* Local User Video */}
-              <div
-                style={{
-                  width: "400px",
-                  height: "300px",
-                  borderRadius: "15px",
-                  overflow: "hidden",
-                  border: "2px solid #ff9800",
-                  position: "relative",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-                  flexShrink: 0,
-                }}
-              >
-                <video
-                  ref={localVideoref}
-                  autoPlay
-                  muted
-                  style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}
-                ></video>
-                <div style={{ position: "absolute", bottom: "10px", left: "10px", background: "rgba(0,0,0,0.6)", padding: "2px 10px", borderRadius: "4px", fontSize: "0.8rem" }}>
-                  You (Host)
+            <div style={{ flex: 1, overflowY: "auto", padding: "40px 20px 150px", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px" }}>
+              
+              {/* LOCAL VIDEO (Label Fixed) */}
+              <div style={{ width: "400px", height: "300px", borderRadius: "20px", overflow: "hidden", border: "2px solid #ff9800", position: "relative", flexShrink: 0 }}>
+                <video ref={localVideoref} autoPlay muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
+                <div style={{ position: "absolute", bottom: "15px", left: "15px", background: "rgba(0,0,0,0.7)", padding: "4px 12px", borderRadius: "8px", fontSize: "0.8rem", color: "white" }}>
+                  You
                 </div>
               </div>
 
-              {/* Remote Users Videos */}
+              {/* REMOTE VIDEOS (Stable Mapping) */}
               {videos.map((v) => (
-                <div
-                  key={v.socketId}
-                  style={{
-                    width: "400px",
-                    height: "300px",
-                    borderRadius: "15px",
-                    overflow: "hidden",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    background: "#000",
-                    position: "relative",
-                    flexShrink: 0,
-                  }}
-                >
+                <div key={v.socketId} style={{ width: "400px", height: "300px", borderRadius: "20px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", background: "#000", position: "relative", flexShrink: 0 }}>
                   <video
                     ref={(ref) => { if (ref && v.stream) ref.srcObject = v.stream; }}
                     autoPlay
@@ -813,65 +748,23 @@ export default function VideoMeetComponent() {
               ))}
             </div>
 
-            {/* 4. CHAT OVERLAY (Pinned) */}
-            {showModal && (
-              <div className={styles.chatRoom} style={{ zIndex: 200 }}>
-                <div className={styles.chatContainer}>
-                    {/* ... (Your existing chat inner JSX) ... */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "10px", borderBottom: "1px solid #333" }}>
-                        <h1 style={{ margin: 0, fontSize: "1.2rem", color: "#ff9800" }}>Chat</h1>
-                        <IconButton onClick={closeChat} style={{ color: "white" }}><CloseIcon /></IconButton>
-                    </div>
-                    <div className={styles.chattingDisplay}>
-                        {messages.map((item, index) => (
-                            <div style={{ marginBottom: "15px" }} key={index}>
-                                <p style={{ fontWeight: "bold", color: "#ff9800", fontSize: "0.9rem" }}>{item.sender}</p>
-                                <p style={{ color: "#ddd" }}>{item.data}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div className={styles.chattingArea}>
-                        <TextField value={message} onChange={handleMessage} placeholder="Type..." variant="outlined" sx={{ input: { color: "white" }, fieldset: { borderColor: "#444" } }} fullWidth />
-                        <Button onClick={sendMessage} style={{ marginLeft: "10px", background: "#ff9800", color: "black", fontWeight: "bold" }}>Send</Button>
-                    </div>
-                </div>
-              </div>
-            )}
-
-            {/* 5. FIXED CONTROLS BAR (Z-Index 100) */}
-            <div
-              className={styles.buttonContainers}
-              style={{
-                position: "fixed",
-                bottom: "30px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                background: "rgba(255, 152, 0, 0.15)",
-                border: "1px solid rgba(255, 152, 0, 0.3)",
-                backdropFilter: "blur(15px)",
-                borderRadius: "50px",
-                padding: "10px 25px",
-                display: "flex",
-                gap: "15px",
-                zIndex: 100,
-                boxShadow: "0 10px 40px rgba(0,0,0,0.6)",
-              }}
-            >
-              <IconButton onClick={handleVideo} style={{ color: video ? "white" : "#ff4444" }}>
+            {/* CONTROLS (Fixed Design) */}
+            <div style={{
+              position: "fixed", bottom: "40px", left: "50%", transform: "translateX(-50%)",
+              display: "flex", gap: "25px", padding: "15px 35px",
+              background: "rgba(20, 20, 20, 0.8)", border: "1px solid rgba(255, 152, 0, 0.2)",
+              backdropFilter: "blur(20px)", borderRadius: "100px", zIndex: 100,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.6)"
+            }}>
+              <IconButton onClick={handleVideo} sx={{ color: video ? "white" : "#ff4444", "&:hover": { bgcolor: "rgba(255,152,0,0.1)" } }}>
                 {video ? <VideocamIcon /> : <VideocamOffIcon />}
               </IconButton>
-              <IconButton onClick={handleAudio} style={{ color: audio ? "white" : "#ff4444" }}>
+              
+              <IconButton onClick={handleAudio} sx={{ color: audio ? "white" : "#ff4444", "&:hover": { bgcolor: "rgba(255,152,0,0.1)" } }}>
                 {audio ? <MicIcon /> : <MicOffIcon />}
               </IconButton>
-              {screenAvailable && (
-                <IconButton onClick={handleScreen} style={{ color: screen ? "#ff9800" : "white" }}>
-                  {screen ? <StopScreenShareIcon /> : <ScreenShareIcon />}
-                </IconButton>
-              )}
-              <Badge badgeContent={newMessages} color="warning">
-                <IconButton onClick={openChat} style={{ color: "white" }}><ChatIcon /></IconButton>
-              </Badge>
-              <IconButton onClick={handleEndCall} style={{ background: "#ff4444", color: "white", marginLeft: "10px" }}>
+
+              <IconButton onClick={handleEndCall} sx={{ bgcolor: "#ff4444", color: "white", p: 1.5, "&:hover": { bgcolor: "#cc0000" } }}>
                 <CallEndIcon />
               </IconButton>
             </div>
