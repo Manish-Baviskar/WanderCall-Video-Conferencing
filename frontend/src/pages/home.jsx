@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import withAuth from '../utils/withAuth';
-import Footer from './footer.jsx'
+import Footer from './footer'; 
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import styles from '../styles/homeComponent.module.css'; 
-import { IconButton, Avatar, Menu, MenuItem, Button, Tooltip, Divider } from '@mui/material';
+
+// --- Material UI Imports ---
+import { IconButton, Avatar, Menu, MenuItem, Tooltip, Divider } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HistoryIcon from '@mui/icons-material/History';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PersonIcon from '@mui/icons-material/Person';
 
 
 function HomeComponent() {
@@ -16,6 +16,16 @@ function HomeComponent() {
     const [meetingCode, setMeetingCode] = useState("");
     const { addToUserHistory } = useContext(AuthContext);
 
+    // --- State for Username ---
+    const [username, setUsername] = useState("Guest");
+
+    useEffect(() => {
+        // Fetch the name or default to "User"
+        const storedName = localStorage.getItem("username") || localStorage.getItem("userId") || "User";
+        setUsername(storedName);
+    }, []);
+
+    // --- Menu State ---
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = Boolean(anchorEl);
 
@@ -28,7 +38,7 @@ function HomeComponent() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        localStorage.clear(); 
         navigate("/");
     };
 
@@ -43,7 +53,6 @@ function HomeComponent() {
         }
     }
 
-    
     const handleGenerateCode = () => {
         const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
@@ -54,38 +63,55 @@ function HomeComponent() {
     };
 
     return (
-        // 1. WRAPPER: Added inline flex styles to force footer to bottom
-        // We keep 'styles.homeWrapper' to maintain your background color/image
-        <div className={styles.homeWrapper} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        // 1. NO SCROLLING: height: 100vh, overflow: hidden
+        <div className={styles.homeWrapper} style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
             
-            {/* 2. NAVBAR */}
             <nav className={styles.homeNav}>
                 <div className={styles.navHeader}>
                     <h2>WanderCall</h2>
                 </div>
 
-                <div className={styles.homeNavlist} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    {/* Replaced old text buttons with this Avatar Menu */}
+                <div className={styles.homeNavlist} style={{ display: 'flex', alignItems: 'center' }}>
                     
-                    <span style={{ color: '#ccc', fontSize: '0.9rem', marginRight: '5px' }}>
-                        My Account
-                    </span>
+                    {/* 2. ORANGE PILL CONTAINER (The Account Button) */}
+                    <div 
+                        onClick={handleMenuClick} // Make the whole pill clickable
+                        style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '10px',
+                            backgroundColor: '#ff9800', // Yellow/Orange Background
+                            padding: '5px 5px 5px 15px', // Padding for the pill shape
+                            borderRadius: '50px', // Round edges
+                            cursor: 'pointer',
+                            transition: '0.3s'
+                        }}
+                    >
+                        {/* 3. BLACK TEXT (Readable) */}
+                        <span style={{ 
+                            color: 'black',  // Black text on Orange background
+                            fontWeight: 'bold', 
+                            fontSize: '1rem' 
+                        }}>
+                            {username}
+                        </span>
 
-                    <Tooltip title="Account Settings">
-                        <IconButton
-                            onClick={handleMenuClick}
-                            size="small"
-                            aria-controls={openMenu ? 'account-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={openMenu ? 'true' : undefined}
-                        >
-                            <Avatar sx={{ width: 40, height: 40, bgcolor: '#ff9800', color: 'black' }}>
-                                <PersonIcon />
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip title="Account Settings">
+                            <IconButton
+                                size="small"
+                                aria-controls={openMenu ? 'account-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={openMenu ? 'true' : undefined}
+                                sx={{ padding: 0 }} // Remove extra padding inside the pill
+                            >
+                                <Avatar sx={{ width: 40, height: 40, bgcolor: 'black', color: '#ff9800', fontWeight: 'bold' }}>
+                                    {username.charAt(0).toUpperCase()}
+                                </Avatar>
+                            </IconButton>
+                        </Tooltip>
+                    </div>
 
-                    {/* The Dropdown Menu */}
+                    {/* Dropdown Menu */}
                     <Menu
                         anchorEl={anchorEl}
                         id="account-menu"
@@ -98,26 +124,16 @@ function HomeComponent() {
                                 overflow: 'visible',
                                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                                 mt: 1.5,
-                                bgcolor: '#1a1a1a', // Dark Background
+                                bgcolor: '#1a1a1a', 
                                 color: 'white',
                                 border: '1px solid #333',
                                 '& .MuiAvatar-root': {
-                                    width: 32,
-                                    height: 32,
-                                    ml: -0.5,
-                                    mr: 1,
+                                    width: 32, height: 32, ml: -0.5, mr: 1,
                                 },
                                 '&:before': {
-                                    content: '""',
-                                    display: 'block',
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: 14,
-                                    width: 10,
-                                    height: 10,
-                                    bgcolor: '#1a1a1a',
-                                    transform: 'translateY(-50%) rotate(45deg)',
-                                    zIndex: 0,
+                                    content: '""', display: 'block', position: 'absolute',
+                                    top: 0, right: 25, width: 10, height: 10,
+                                    bgcolor: '#1a1a1a', transform: 'translateY(-50%) rotate(45deg)', zIndex: 0,
                                 },
                             },
                         }}
@@ -127,7 +143,9 @@ function HomeComponent() {
                         <MenuItem onClick={handleHistory} sx={{ '&:hover': { bgcolor: '#333' } }}>
                             <HistoryIcon sx={{ marginRight: '10px', color: '#ff9800' }} /> History
                         </MenuItem>
+                        
                         <Divider sx={{ bgcolor: '#333' }} />
+                        
                         <MenuItem onClick={handleLogout} sx={{ '&:hover': { bgcolor: '#333' } }}>
                             <LogoutIcon sx={{ marginRight: '10px', color: '#ff9800' }} /> Logout
                         </MenuItem>
@@ -135,9 +153,8 @@ function HomeComponent() {
                 </div>
             </nav>
 
-            {/* 3. MAIN CONTENT */}
-            {/* Wrapped in a div with flex: 1 so it pushes the footer down */}
-            <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+            {/* Main Content: flex: 1 takes up all remaining space */}
+            <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 
                 <div className={styles.homeMainContainer}>
                     <div className={styles.textSection}>
@@ -169,7 +186,6 @@ function HomeComponent() {
                     </div>
                 </div>
 
-                {/* Patterns - Kept exactly as they were */}
                 <svg className={`${styles.pattern} ${styles.patternTop}`} width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 100 C 100 10, 200 190, 390 100" stroke="#ffa500" strokeWidth="2" strokeDasharray="10 10" fill="none"/>
                 </svg>
@@ -180,12 +196,11 @@ function HomeComponent() {
                 
             </div>
 
-            {/* 4. FOOTER COMPONENT */}
+            {/* Footer stays at the bottom */}
             <Footer />
 
         </div>
     );
-
 }
 
 export default withAuth(HomeComponent);
