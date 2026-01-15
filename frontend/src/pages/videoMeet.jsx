@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import io from "socket.io-client";
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -27,6 +28,17 @@ const peerConfigConnections = {
 }
 
 export default function VideoMeetComponent() {
+
+    const meetingCodeRef = useRef(null);
+
+useEffect(() => {
+    // Capture the code IMMEDIATELY when the page loads
+    // This locks "dqdx3p" into memory before any redirects happen
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    meetingCodeRef.current = segments.pop(); 
+    
+    console.log("Meeting Code Locked:", meetingCodeRef.current);
+}, []);
 
     var socketRef = useRef();
     let socketIdRef = useRef();
@@ -63,22 +75,25 @@ export default function VideoMeetComponent() {
 
     const { addToUserHistory } = useContext(AuthContext);
 
-    const markLeave = async () => {
+   const markLeave = async () => {
     try {
+        console.log("--- MARK LEAVE STARTED ---");
+
         if (localStorage.getItem("token")) {
             
-            // 1. Get Clean Code
-            // This handles "/dqdx3p" OR "/dqdx3p/" OR "/room/dqdx3p"
-            const segments = window.location.pathname.split('/').filter(Boolean);
-            const cleanCode = segments.pop();
+            // USE THE LOCKED CODE (Not window.location)
+            const cleanCode = meetingCodeRef.current;
 
-            console.log("ATTEMPTING TO LEAVE:", cleanCode); // <--- Watch this log!
+            if (!cleanCode) {
+                console.error("ERROR: No meeting code found in Ref!");
+                return;
+            }
 
-            if (!cleanCode) return; 
+            console.log("Leaving Meeting Code:", cleanCode); 
 
             const data = {
                 token: localStorage.getItem("token"),
-                meeting_code: cleanCode 
+                meeting_code: cleanCode // Sends "dqdx3p" even if you are on /home
             };
 
             await fetch(`${server_url}/api/v1/users/update_leave_time`, {
@@ -89,7 +104,7 @@ export default function VideoMeetComponent() {
             });
         }
     } catch (e) {
-        console.log("Frontend Error:", e);
+        console.error("Error in markLeave:", e);
     }
 }
 
@@ -492,12 +507,13 @@ export default function VideoMeetComponent() {
         tracks.forEach(track => track.stop())
     } catch (e) { }
 
-    // Redirect immediately - the 'keepalive' request above continues in background
-    // if (localStorage.getItem("token")) {
-    //     window.location.href = "/home";
-    // } else {
-    //     window.location.href = "/";
-    // }
+    setTimeout(() => {
+        if (localStorage.getItem("token")) {
+            window.location.href = "/home";
+        } else {
+            window.location.href = "/";
+        }
+    }, 500);
 }
 
 
