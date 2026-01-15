@@ -124,11 +124,34 @@ function HomeComponent() {
                         <div className={styles.joinSection}>
                             <TextField
                                 fullWidth
-                                variant="outlined"
                                 placeholder="Enter Code (e.g. q5x-99p)"
                                 value={meetingCode}
                                 onChange={e => setMeetingCode(e.target.value)}
-                                className={styles.inputField}
+                                InputProps={{
+                                    style: { color: 'white' } // Forces text to be white
+                                }}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white', 
+                                        bgcolor: '#2c2c2c',  // Much lighter grey so it's visible
+                                        borderRadius: '12px',
+                                        '& fieldset': { 
+                                            borderColor: '#666', // Visible Grey Border
+                                            borderWidth: '1px'
+                                        },
+                                        '&:hover fieldset': { 
+                                            borderColor: '#999'  // Lighter on hover
+                                        },
+                                        '&.Mui-focused fieldset': { 
+                                            borderColor: '#ff9800', // Orange when typing
+                                            borderWidth: '2px'
+                                        },
+                                    },
+                                    '& .MuiInputBase-input::placeholder': {
+                                        color: '#aaa', // Make placeholder visible
+                                        opacity: 1,
+                                    },
+                                }}
                             />
                             <Button variant="contained" onClick={handleJoinVideoCall} sx={{
                                     bgcolor: '#ff9800',
