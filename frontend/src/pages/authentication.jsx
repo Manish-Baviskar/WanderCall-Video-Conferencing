@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import GoogleIcon from '@mui/icons-material/Google';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -30,6 +31,16 @@ export default function Authentication() {
 
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+  const handleGoogleLogin = () => {
+    // Dynamically choose backend URL based on where frontend is running
+    const backendUrl = window.location.hostname === "localhost" 
+        ? "http://localhost:8000" 
+        : "https://wandercallbackend.onrender.com"; // Your LIVE Backend URL
+        
+    // Redirect browser to the backend trigger route
+    window.location.href = `${backendUrl}/api/v1/users/auth/google`;
+  };
 
   const handleAuth = async () => {
     setIsLoading(true);
@@ -123,6 +134,29 @@ export default function Authentication() {
             </Typography>
 
             <Box component="form" noValidate sx={{ mt: 1, width: '100%' }}>
+
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<GoogleIcon />}
+                onClick={handleGoogleLogin}
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  borderColor: '#4285F4',
+                  color: 'white', 
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  '&:hover': {
+                    borderColor: '#4285F4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)'
+                  }
+                }}
+              >
+                Sign in with Google
+              </Button>
+
+              <Divider sx={{ my: 2, color: 'gray' }}>OR</Divider>
               
               {formState === 1 && (
                 <TextField

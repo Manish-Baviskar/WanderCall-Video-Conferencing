@@ -7,50 +7,67 @@ import { Meeting } from "../models/meeting.model.js";
 
 
 const login = async (req, res) => {
-    const { name, username, password } = req.body;
+    const { username, password } = req.body; // Removed 'name' (not needed for login)
 
-    if(!username || !password){
-        return res.status(400).json({message: "Please provide"});
+    if (!username || !password) {
+        return res.status(400).json({ message: "Please provide Username and Password" });
     }
 
-    try{
-        const user = await User.findOne({username});
-        if(!user){
-            return res.status(httpStatus.NOT_FOUND).json({message: "User not found"});
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
         }
+
+        // --- NEW SAFETY CHECK FOR GOOGLE USERS ---
+        // If user registered via Google, they have no password.
+        if (!user.password) {
+            return res.status(400).json({ 
+                message: "This account uses Google Sign-In. Please login with Google." 
+            });
+        }
+        // ------------------------------------------
 
         let isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         if (isPasswordCorrect) {
             let token = crypto.randomBytes(20).toString("hex");
-
             user.token = token;
             await user.save();
-            return res.status(httpStatus.OK).json({ token: token, name: user.name, username: user.username });
-        } else{
-            return res.status(httpStatus.UNAUTHORIZED).json({message: "Invalid Username or password"});
+            return res.status(httpStatus.OK).json({ token: token, name: user.name, username: user.username, email: user.email });
+        } else {
+            return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid Username or password" });
         }
-    }
-    catch(e){
+    } catch (e) {
         console.log("LOGIN ERROR DETAILS:", e);
-        return res.status(500).json({message: `Something went wrong ${e}`});
+        return res.status(500).json({ message: `Something went wrong ${e}` });
     }
 }
 
 const register = async (req, res) => {
+    // 1. Add 'email' to destructuring (Standard for modern auth)
+    const { name, username, password, email } = req.body;
 
-    const { name, username, password } = req.body;
+    try {
+        // --- SECURITY CHECK START ---
+        // Since DB model has `password: { required: false }`, we MUST check it here.
+        if (!password) {
+            return res.status(400).json({ message: "Password is required for registration" });
+        }
+        // --- SECURITY CHECK END ---
 
-    try{
-        if (!username) {
-            console.log("❌ Username is missing!");
-            return res.status(400).json({ message: "Username is required" });
+        if (!username || !name || !email) {
+            return res.status(400).json({ message: "All fields (Name, Username, Email) are required" });
         }
 
-        const existingUser = await User.findOne({username});
-        if(existingUser){
-            console.log("FOUND USER IN DB:", existingUser);
-            return res.status(httpStatus.CONFLICT).json({message: "User already exists"});
+        // 2. Check if Username OR Email already exists
+        const existingUser = await User.findOne({ 
+            $or: [{ username }, { email }] 
+        });
+
+        if (existingUser) {
+            console.log("FOUND DUPLICATE USER:", existingUser);
+            return res.status(httpStatus.CONFLICT).json({ message: "User with this username or email already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -58,19 +75,18 @@ const register = async (req, res) => {
         const newUser = new User({
             name: name,
             username: username,
-            password: hashedPassword
+            email: email, // Don't forget to save the email!
+            password: hashedPassword,
         });
 
         await newUser.save();
 
-        res.status(httpStatus.CREATED).json({message: "User Registered"});
+        res.status(httpStatus.CREATED).json({ message: "User Registered Successfully" });
 
-    } 
-    catch(e){
+    } catch (e) {
         console.log(e);
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({message: `Something went wrong: ${e}`});
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: `Something went wrong: ${e}` });
     }
-
 }
 
 const getUserHistory = async (req, res) => {
