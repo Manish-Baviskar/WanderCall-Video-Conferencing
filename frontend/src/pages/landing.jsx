@@ -123,7 +123,7 @@ export default function LandingPage() {
         {/* Right Side: Image */}
         <div className={styles.imageSection}>
           <img
-            src="/mobile.webp"
+            src="https://res.cloudinary.com/dz7fdvk48/image/upload/v1768548357/Group_video-amico_1_qnomat.png"
             alt="Mobile Video Call"
             className={styles.heroImage}
             loading="eager"
