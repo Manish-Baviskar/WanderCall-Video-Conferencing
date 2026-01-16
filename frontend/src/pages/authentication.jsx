@@ -45,6 +45,7 @@ const GoogleLogo = () => (
 );
 
 export default function Authentication() {
+  const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
@@ -73,10 +74,11 @@ export default function Authentication() {
       if (formState === 0) {
         await handleLogin(username, password);
       } else {
-        await handleRegister(name, username, password);
+        await handleRegister(name, username, password, email);
         setUsername("");
         setPassword("");
         setName("");
+        setEmail("");
         setFormState(0);
         setMessage("Registration Successful! Please login.");
         setOpen(true);
@@ -201,15 +203,27 @@ export default function Authentication() {
               <Divider sx={{ my: 2, color: "gray" }}>OR</Divider>
 
               {formState === 1 && (
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Full Name"
-                  name="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Full Name"
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Email Address"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </>
               )}
 
               <TextField
