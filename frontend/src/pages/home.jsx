@@ -28,8 +28,8 @@ function HomeComponent() {
   useEffect(() => {
     // Try all possible keys where name might be stored
     const storedName =
+      localStorage.getItem("name") || 
       localStorage.getItem("username") ||
-      localStorage.getItem("name") ||
       localStorage.getItem("userId");
 
     if (storedName && storedName !== "undefined" && storedName !== "null") {
