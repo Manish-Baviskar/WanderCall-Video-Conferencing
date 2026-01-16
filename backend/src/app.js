@@ -20,7 +20,12 @@ const io = connectToSocket(server);
 
 
 app.set("port", (process.env.PORT || 8080));
-app.use(cors());
+app.use(cors({
+    origin: ["https://wandercall-wfwx.onrender.com"], 
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+}));
 app.use(express.json({limit: "40kb"}));
 app.use(express.urlencoded({limit: "40kb", extended: true}));
 
