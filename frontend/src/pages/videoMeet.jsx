@@ -168,46 +168,42 @@ export default function VideoMeetComponent() {
 
   const getPermissions = async () => {
     try {
-      const videoPermission = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
-      if (videoPermission) {
-        setVideoAvailable(true);
-      } else {
-        setVideoAvailable(false);
-      }
-
-      const audioPermission = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      if (audioPermission) {
-        setAudioAvailable(true);
-      } else {
-        setAudioAvailable(false);
-      }
-
-      if (navigator.mediaDevices.getDisplayMedia) {
-        setScreenAvailable(true);
-      } else {
-        setScreenAvailable(false);
-      }
-
-      if (videoAvailable || audioAvailable) {
+        // 1. Request both at once to avoid hardware locking
         const userMediaStream = await navigator.mediaDevices.getUserMedia({
-          video: videoAvailable,
-          audio: audioAvailable,
+            video: true,
+            audio: true,
         });
+
         if (userMediaStream) {
-          window.localStream = userMediaStream;
-          if (localVideoref.current) {
-            localVideoref.current.srcObject = userMediaStream;
-          }
+            // 2. Set availability states based on the successful stream
+            setVideoAvailable(true);
+            setAudioAvailable(true);
+            
+            // 3. Store the stream globally and in the local ref
+            window.localStream = userMediaStream;
+            if (localVideoref.current) {
+                localVideoref.current.srcObject = userMediaStream;
+            }
         }
-      }
+
+        // 4. Check for screen sharing support (does not prompt hardware)
+        if (navigator.mediaDevices.getDisplayMedia) {
+            setScreenAvailable(true);
+        } else {
+            setScreenAvailable(false);
+        }
+
     } catch (error) {
-      console.log(error);
+        console.error("Permission Error:", error);
+        
+        // If the combined request fails, try to determine what is available
+        setVideoAvailable(false);
+        setAudioAvailable(false);
+
+        // Mobile Debug Tip: Alerting the error name helps identify OS-level blocks
+        // alert("Camera/Mic Error: " + error.name); 
     }
-  };
+};
 
   let getMedia = () => {
     setVideo(videoAvailable);
@@ -775,7 +771,7 @@ export default function VideoMeetComponent() {
             </div>
 
             <div className={styles.videoPreviewContainer} style={{ border: '2px solid #ff9800', borderRadius: '20px', overflow: 'hidden' }}>
-              <video ref={localVideoref} autoPlay muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
+              <video ref={localVideoref} autoPlay muted playsInline style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
             </div>
           </div>
         ) : (
@@ -810,7 +806,7 @@ export default function VideoMeetComponent() {
               
               {/* LOCAL VIDEO */}
               <div style={{ width: "400px", height: "300px", borderRadius: "20px", overflow: "hidden", border: "2px solid #ff9800", position: "relative", flexShrink: 0, boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-                <video ref={localVideoref} autoPlay muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
+                <video ref={localVideoref} autoPlay muted playsInline style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}></video>
                 <div style={{ position: "absolute", bottom: "15px", left: "15px", background: "rgba(0,0,0,0.7)", padding: "4px 12px", borderRadius: "8px", fontSize: "0.8rem", color: "white" }}>You</div>
               </div>
 
@@ -820,6 +816,7 @@ export default function VideoMeetComponent() {
                   <video
                     ref={(ref) => { if (ref && v.stream && ref.srcObject !== v.stream) ref.srcObject = v.stream; }} // THE FLICKER FIX
                     autoPlay
+                    playsInline
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   ></video>
                 </div>

@@ -187,38 +187,88 @@
     z-index: 20;
 }
 
-/* RESPONSIVE */
+/* --- CONSOLIDATED RESPONSIVE DESIGN --- */
+
 @media (max-width: 1024px) {
+    .navbar {
+        padding: 20px 40px;
+    }
+
+    /* Stack image on top, text on bottom */
     .landingMainContainer {
-        flex-direction: column-reverse; /* Text on bottom, Image on top for mobile */
+        flex-direction: column-reverse; 
         justify-content: center;
         text-align: center;
-        padding: 40px 20px;
+        padding: 120px 40px 60px; /* Space for fixed navbar */
+        gap: 40px;
     }
-    .textSection h1 { font-size: 3rem; }
-    .textSection p { margin: 0 auto 40px auto; }
+
+    .textSection {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center buttons/text */
+    }
+
+    .textSection h1 {
+        font-size: 3.5rem;
+    }
+
+    .imageSection {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .heroImage {
+        max-width: 450px;
+    }
+
+    .navlist {
+        display: none; /* Hide links, keep only Login for space */
+    }
+}
+
+@media (max-width: 768px) {
     .navbar {
-        padding: 20px;
+        padding: 15px 25px;
     }
-    .navlist { display: none; } /* Hide nav links on mobile */
-    .heroImage { max-width: 350px; margin-bottom: 40px; }
-    .imageSection { justify-content: center; }
+
+    .textSection h1 {
+        font-size: 2.8rem;
+    }
+
+    .textSection p {
+        font-size: 1.1rem;
+        margin: 20px 0 30px;
+        max-width: 100%;
+    }
+
+    .heroImage {
+        max-width: 350px;
+    }
 }
 
-/* Glow for Social Icons */
-.socialIcon {
-    color: #aaa !important; /* Base Grey */
-    transition: all 0.3s ease-in-out;
-}
+@media (max-width: 480px) {
+    .landingMainContainer {
+        padding: 100px 20px 40px;
+    }
 
-.socialIcon:hover {
-    color: #ff9800 !important; /* Theme Orange */
-    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.8)); /* Glow */
-    transform: translateY(-3px); /* Subtle Lift */
-}
+    .textSection h1 {
+        font-size: 2.2rem;
+    }
 
-/* Glow for Quick Links */
-.footerLink:hover {
-    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-    text-decoration: underline !important;
+    .navHeader h2 {
+        font-size: 1.4rem;
+    }
+
+    .getStartedBtn {
+        padding: 15px 35px;
+        font-size: 1.1rem;
+        width: 100%; /* Full width button on mobile */
+    }
+
+    /* Hide background waves on tiny screens for clarity */
+    .landingWave, .patternCorner {
+        display: none !important;
+    }
 }

@@ -22,6 +22,7 @@ export default function LandingPage() {
       {/* --- NEW: LEFT WAVE (Behind Text Only) --- */}
       {/* Notice: width is only 50% so it stops in the middle */}
       <svg
+        className={styles.landingWave}
         style={{
           position: "absolute",
           top: 0,
@@ -56,6 +57,7 @@ export default function LandingPage() {
       {/* --- NEW: RIGHT WAVE (Behind Image Only) --- */}
       {/* Notice: positioned bottom-right, distinct from the left one */}
       <svg
+        className={styles.landingWave}
         style={{
           position: "absolute",
           bottom: 0,
