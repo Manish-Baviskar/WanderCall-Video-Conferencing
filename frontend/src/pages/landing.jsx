@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/landing.module.css";
 import AboutModal from "./AboutModal";
 
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; 
-import { IconButton, Tooltip } from '@mui/material';
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { IconButton, Tooltip } from "@mui/material";
 
 export default function LandingPage() {
   const router = useNavigate();
@@ -84,7 +84,9 @@ export default function LandingPage() {
       {/* 2. NAVBAR */}
       <nav className={styles.navbar}>
         <div className={styles.navHeader}>
-          <h2>WanderCall</h2>
+          <h2>
+            Wander<span style={{ color: "#ff9800" }}>Call</span>
+          </h2>
         </div>
         <div className={styles.navlist}>
           <p onClick={handleGuestJoin} className={styles.navLink}>
@@ -129,46 +131,62 @@ export default function LandingPage() {
             alt="Mobile Video Call"
             className={styles.heroImage}
             loading="eager"
-            fetchpriority="high" 
-            style={{ maxWidth: '100%', height: 'auto' }}
+            fetchpriority="high"
+            style={{ maxWidth: "100%", height: "auto" }}
           />
         </div>
       </div>
 
-      <div style={{ position: 'absolute', bottom: '30px', left: '40px', zIndex: 100 }}>
-                <Tooltip title="About WanderCall" arrow placement="right">
-                    <IconButton 
-                        onClick={() => setAboutOpen(true)}
-                        sx={{ 
-                            color: 'rgba(255,255,255,0.5)', 
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            transition: '0.3s',
-                            '&:hover': { color: '#ff9800', borderColor: '#ff9800', transform: 'scale(1.1)' }
-                        }}
-                    >
-                        <HelpOutlineIcon />
-                    </IconButton>
-                </Tooltip>
-            </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "30px",
+          left: "40px",
+          zIndex: 100,
+        }}
+      >
+        <Tooltip title="About WanderCall" arrow placement="right">
+          <IconButton
+            onClick={() => setAboutOpen(true)}
+            sx={{
+              color: "rgba(255,255,255,0.5)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              transition: "0.3s",
+              "&:hover": {
+                color: "#ff9800",
+                borderColor: "#ff9800",
+                transform: "scale(1.1)",
+              },
+            }}
+          >
+            <HelpOutlineIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
 
-            <div style={{
-                position: 'absolute',
-                bottom: '15px',
-                left: 0,
-                width: '100%',
-                textAlign: 'center',
-                color: 'rgba(255, 255, 255, 0.4)', // Subtle grey
-                fontSize: '0.8rem',
-                zIndex: 100,
-                pointerEvents: 'none' // Lets clicks pass through if needed
-            }}>
-                <p>
-                    &copy; 2026 WanderCall. Made with <span style={{ color: '#ff9800' }}>♥</span> by <span style={{ color: '#fff', fontWeight: '500' }}>Manish Baviskar</span>
-                </p>
-            </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "15px",
+          left: 0,
+          width: "100%",
+          textAlign: "center",
+          color: "rgba(255, 255, 255, 0.4)", // Subtle grey
+          fontSize: "0.8rem",
+          zIndex: 100,
+          pointerEvents: "none", // Lets clicks pass through if needed
+        }}
+      >
+        <p>
+          &copy; 2026 WanderCall. Made with{" "}
+          <span style={{ color: "#ff9800" }}>♥</span> by{" "}
+          <span style={{ color: "#fff", fontWeight: "500" }}>
+            Manish Baviskar
+          </span>
+        </p>
+      </div>
 
       <AboutModal isOpen={isAboutOpen} onClose={() => setAboutOpen(false)} />
-
     </div>
   );
 }

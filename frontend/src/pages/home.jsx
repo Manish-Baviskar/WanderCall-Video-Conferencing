@@ -115,7 +115,9 @@ function HomeComponent() {
       {/* NAVBAR */}
       <nav className={styles.homeNav}>
         <div className={styles.navHeader}>
-          <h2>WanderCall</h2>
+          <h2>
+            <span style={{ color: "#fff" }}>Wander</span><span style={{ color: "#ff9800" }}>Call</span>
+          </h2>
         </div>
 
         <div className={styles.homeNavlist}>
@@ -275,7 +277,10 @@ function HomeComponent() {
           </div>
 
           <div className={styles.cardImageSection}>
-            <img src="https://res.cloudinary.com/dz7fdvk48/image/upload/v1768548357/Remote_meeting-rafiki_fqsiwa.png" alt="WanderCall Logo" />
+            <img
+              src="https://res.cloudinary.com/dz7fdvk48/image/upload/v1768548357/Remote_meeting-rafiki_fqsiwa.png"
+              alt="WanderCall Logo"
+            />
           </div>
         </div>
       </div>
