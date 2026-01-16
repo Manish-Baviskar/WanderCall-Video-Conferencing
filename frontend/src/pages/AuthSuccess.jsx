@@ -14,7 +14,7 @@ const AuthSuccess = () => {
             localStorage.setItem("token", token);
             
             // 3. Redirect to the Lobby/Meeting page
-            navigate("/lobby"); // Change this to your actual route (e.g. /home, /dashboard)
+            navigate("/home"); // Change this to your actual route (e.g. /home, /dashboard)
         } else {
             // If something failed, go back to login
             navigate("/auth"); 
