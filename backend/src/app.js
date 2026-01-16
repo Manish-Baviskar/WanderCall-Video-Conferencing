@@ -12,6 +12,8 @@ import { connectToSocket } from "./controllers/socketManager.js";
 import cors from "cors";
 import userRoutes from "./routes/users.routes.js";
 
+import passport from "passport";
+
 import "./utils/googleStrategy.js";
 
 

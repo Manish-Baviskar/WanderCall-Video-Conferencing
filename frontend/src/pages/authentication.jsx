@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
-import { Snackbar, CircularProgress } from '@mui/material';
+import { Snackbar, CircularProgress, Divider } from '@mui/material';
 
 
 const defaultTheme = createTheme({
