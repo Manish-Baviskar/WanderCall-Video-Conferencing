@@ -249,8 +249,15 @@
 }
 
 @media (max-width: 480px) {
+    .landingWrapper {
+        /* FIX: Allow scrolling on mobile so items don't overlap */
+        height: auto !important; 
+        min-height: 100vh;
+        overflow-y: auto !important; 
+    }
+
     .landingMainContainer {
-        padding: 100px 20px 40px;
+        padding: 100px 20px 150px 20px;
     }
 
     .textSection h1 {
