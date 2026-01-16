@@ -39,7 +39,9 @@ router.route("/auth/google/callback").get(
             : "http://localhost:5173"; 
 
         // 4. Redirect with the NEW token
-        res.redirect(`${clientURL}/auth-success?token=${token}`);
+        res.redirect(
+        `${clientURL}/auth-success?token=${token}&name=${encodeURIComponent(user.name)}&username=${user.username}`
+    );
         
         // --- FIX ENDS HERE ---
         

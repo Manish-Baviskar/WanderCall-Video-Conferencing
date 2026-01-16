@@ -8,10 +8,15 @@ const AuthSuccess = () => {
         // 1. Get the URL parameters (e.g., ?token=abcdef123)
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
+        const name = params.get("name");         
+        const username = params.get("username");
 
         if (token) {
             // 2. Save token to LocalStorage (Just like manual login)
             localStorage.setItem("token", token);
+
+            if (name) localStorage.setItem("name", name); // Or "fullName" depending on what your app uses
+            if (username) localStorage.setItem("username", username);
             
             // 3. Redirect to the Lobby/Meeting page
             navigate("/home"); // Change this to your actual route (e.g. /home, /dashboard)
