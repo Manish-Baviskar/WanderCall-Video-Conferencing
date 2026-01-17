@@ -177,7 +177,7 @@ export default function Authentication() {
   variant="body2"
   sx={{
     mt: 1,
-    mb: 2.5,
+    mb: 1.2,
     color: "#B0B0B0",
     letterSpacing: "0.3px",
     textAlign: "center",
