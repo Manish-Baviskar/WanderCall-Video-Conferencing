@@ -156,6 +156,7 @@ export default function LandingPage() {
           <IconButton
             onClick={() => setAboutOpen(true)}
             sx={{
+              display: { xs: "none", sm: "inline-flex" },
               color: "rgba(255,255,255,0.5)",
               border: "1px solid rgba(255,255,255,0.2)",
               transition: "0.3s",

@@ -262,6 +262,14 @@
     .heroImage {
         max-width: 350px;
     }
+
+    .getStartedBtn {
+    margin-bottom: 24px; /* reduce gap on mobile */
+  }
+
+    .footer {
+    margin-top: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -288,10 +296,15 @@
         padding: 15px 35px;
         font-size: 1.1rem;
         width: 100%; /* Full width button on mobile */
+        margin-bottom: 24px;
     }
 
     /* Hide background waves on tiny screens for clarity */
     .landingWave, .patternCorner {
         display: none !important;
     }
+
+    .footer {
+    margin-top: 16px;
+  }
 }
