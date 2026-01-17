@@ -44,6 +44,11 @@ const GoogleLogo = () => (
   </svg>
 );
 
+const BACKEND_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8080"
+    : "https://wandercallbackend.onrender.com";
+
 export default function Authentication() {
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
@@ -59,74 +64,82 @@ export default function Authentication() {
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
   const warmUpServer = async () => {
-  try {
-    const backendUrl =
-      window.location.hostname === "localhost"
-        ? "http://localhost:8080"
-        : "https://wandercallbackend.onrender.com";
+  const start = Date.now();
 
-    const res = await fetch(`${backendUrl}/health`, {
+  try {
+    const res = await fetch(`${BACKEND_URL}/health`, {
       cache: "no-store",
     });
 
-    return res.ok;
+    const duration = Date.now() - start;
+
+    // If response took more than 800ms → treat as cold start
+    return {
+      ok: res.ok,
+      cold: duration > 800,
+    };
   } catch {
-    return false;
+    return { ok: false, cold: true };
   }
 };
 
 
-  const handleGoogleLogin = async () => {
 
+ const handleGoogleLogin = async () => {
+  const result = await warmUpServer();
+
+  // Only show overlay if backend was cold
+  if (result.cold) {
     setIsWarmingUp(true);
+  }
 
-    const backendReady = await warmUpServer();
-
-    if (!backendReady) {
+  if (!result.ok) {
     setIsWarmingUp(false);
-    setError("Server is starting. Please try again in a moment.");
+    setError("Server is starting. Please try again.");
     return;
   }
 
-    // Dynamically choose backend URL based on where frontend is running
-    const backendUrl =
-      window.location.hostname === "localhost"
-        ? "http://localhost:8080"
-        : "https://wandercallbackend.onrender.com"; // Your LIVE Backend URL
+  setTimeout(() => {
+    window.location.href = `${BACKEND_URL}/api/v1/users/auth/google`;
+  }, result.cold ? 400 : 0);
+};
 
-    // Redirect browser to the backend trigger route
-    setTimeout(() => {
-    window.location.href = `${backendUrl}/api/v1/users/auth/google`;
-  }, 400);
-  };
+
+    // Dynamically choose backend URL based on where frontend is running
+    
 
   const handleAuth = async () => {
-    setIsWarmingUp(true);
-  await warmUpServer();
-  setIsWarmingUp(false);
+  const result = await warmUpServer();
 
-    setIsLoading(true);
-    try {
-      if (formState === 0) {
-        await handleLogin(username, password);
-      } else {
-        await handleRegister(name, username, password, email);
-        setUsername("");
-        setPassword("");
-        setName("");
-        setEmail("");
-        setFormState(0);
-        setMessage("Registration Successful! Please login.");
-        setOpen(true);
-      }
-    } catch (err) {
-      let msg = err.response?.data?.message || "Something went wrong";
-      setError(msg);
-    } finally {
-      // 2. Stop Loading (This runs even if there is an error)
-      setIsLoading(false);
+  if (result.cold) {
+    setIsWarmingUp(true);
+  }
+
+  if (!result.ok) {
+    setIsWarmingUp(false);
+    setError("Server is starting. Please try again.");
+    return;
+  }
+
+  setIsWarmingUp(false);
+  setIsLoading(true);
+
+  try {
+    if (formState === 0) {
+      await handleLogin(username, password);
+    } else {
+      await handleRegister(name, username, password, email);
+      setFormState(0);
+      setMessage("Registration Successful! Please login.");
+      setOpen(true);
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.message || "Something went wrong");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
