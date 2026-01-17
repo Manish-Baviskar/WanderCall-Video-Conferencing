@@ -173,6 +173,22 @@ export default function Authentication() {
               {formState === 0 ? "Sign In" : "Sign Up"}
             </Typography>
 
+            <Typography
+  variant="body2"
+  sx={{
+    mt: 1,
+    mb: 3,
+    color: "#B0B0B0",
+    letterSpacing: "0.3px",
+    textAlign: "center",
+  }}
+>
+  {formState === 0
+    ? "Sign in to start or manage your meetings"
+    : "Create an account to start hosting meetings"}
+</Typography>
+
+
             <Box component="form" noValidate sx={{ mt: 1, width: "100%" }}>
               <Button
                 fullWidth

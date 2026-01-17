@@ -136,6 +136,21 @@
     max-width: 90%;
 }
 
+.trustBadges {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.3px;
+}
+
+.trustBadges span {
+  display: flex;
+  align-items: center;
+}
+
 .getStartedBtn {
     display: inline-block;
     background: #ff9800;

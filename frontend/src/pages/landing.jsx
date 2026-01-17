@@ -117,6 +117,13 @@ export default function LandingPage() {
             Experience high-quality video calls that make you feel like you’re
             actually there. Seamless, fast, and free.
           </p>
+
+         <div className={styles.trustBadges}>
+    <span>• Free</span>
+    <span>• Secure</span>
+    <span>• Peer-to-Peer</span>
+  </div>
+
           <Link to="/auth" className={styles.getStartedBtn}>
             Get Started
           </Link>
