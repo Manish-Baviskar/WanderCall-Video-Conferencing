@@ -3,13 +3,15 @@
 A robust full-stack video conferencing application built with the MERN stack. WanderCall facilitates low-latency, real-time video and audio communication using WebRTC peer-to-peer architecture, supported by a secure Node.js backend.
 
 ### 🔴 **[Live Demo](https://wandercall-wfwx.onrender.com/)** *(Click the link to test the application)*
+> 💡 Tip: You can join meetings instantly as a guest or sign in using Google for access to meeting history.
+
 
 ## 🚀 Key Features
 
 -   **Real-time Video & Audio:** High-quality, low-latency streaming using WebRTC.
 -   **Instant Messaging:** Integrated chat functionality for participants during calls.
 -   **Guest Access:** Allows users to join meetings instantly without mandatory registration.
--   **Secure Authentication:** User login and registration powered by JWT and Bcrypt.
+-   **Secure Authentication:** Google OAuth 2.0 login/signup and email-password authentication using JWT & Bcrypt.
 -   **Meeting History:** Persistent tracking of user activity and past meetings.
 -   **Room Management:** Dynamic room creation and joining logic.
 -   **Responsive Design:** Works on desktop and mobile browsers.
@@ -58,6 +60,23 @@ Once signaling is complete, the application uses **WebRTC** to establish a direc
 * **Token Generation:** Uses Node.js native `crypto` module to generate secure, random hex tokens for session management.
 * **Password Hashing:** Uses `bcrypt` for secure salt-and-hash storage of user credentials.
 
+## 🔐 Authentication & Authorization
+
+WanderCall supports both **OAuth-based** and **credential-based** authentication mechanisms to ensure flexibility and security.
+
+### Google OAuth 2.0
+- Enables users to **sign up and sign in using their Google account**
+- Eliminates the need to remember passwords
+- OAuth flow is handled securely via Passport.js
+- Google access tokens are verified on the backend before session creation
+
+### Email & Password Authentication
+- Passwords are securely hashed using **bcrypt**
+- Authentication is handled using **JWT (JSON Web Tokens)**
+- Tokens are used to protect user-specific routes and meeting history
+
+This hybrid approach ensures both **ease of access** and **strong security**.
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -69,6 +88,8 @@ Once signaling is complete, the application uses **WebRTC** to establish a direc
 -   **Node.js & Express.js:** RESTful API and Signaling server.
 -   **Socket.io:** Real-time bi-directional event-based communication.
 -   **MongoDB & Mongoose:** NoSQL database for flexible data modeling.
+-   **Passport.js:** Authentication middleware for Google OAuth 2.0.
+-   **bcrypt:** Secure password hashing
 -   **Crypto:** Secure random byte generation for tokens.
 -   **JWT:** Stateless authentication.
 
@@ -107,6 +128,9 @@ Create a `.env` file in the `backend/` folder and add your specific credentials:
 ```properties
 PORT=8000
 MONGO_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/wandercall
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:8080/auth/google/callback
 ```
 
 **Start the Server:**
