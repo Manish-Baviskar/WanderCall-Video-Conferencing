@@ -174,46 +174,52 @@ export default function Authentication() {
             </Typography>
 
             <Typography
-  variant="body2"
-  sx={{
-    mt: 1,
-    mb: 1.2,
-    color: "#B0B0B0",
-    letterSpacing: "0.3px",
-    textAlign: "center",
-  }}
->
-  {formState === 0
-    ? "Sign in to start or manage your meetings"
-    : "Create an account to start hosting meetings"}
-</Typography>
-
+              variant="body2"
+              sx={{
+                mt: 1,
+                mb: 1.2,
+                color: "#B0B0B0",
+                letterSpacing: "0.3px",
+                textAlign: "center",
+              }}
+            >
+              {formState === 0
+                ? "Sign in to start or manage your meetings"
+                : "Create an account to start hosting meetings"}
+            </Typography>
 
             <Box component="form" noValidate sx={{ mt: 1, width: "100%" }}>
               <Button
                 fullWidth
-                variant="contained" // Changing to 'contained' for the white background
-                startIcon={<GoogleLogo />} // Use the colorful icon
+                variant="contained"
+                startIcon={!isLoading && <GoogleLogo />}
                 onClick={handleGoogleLogin}
+                disabled={isLoading}
                 sx={{
                   mt: 2,
                   mb: 2,
-                  backgroundColor: "white", // Official White Background
-                  color: "#1f1f1f", // Official Dark Grey Text
-                  textTransform: "none", // Prevents ALL CAPS
+                  backgroundColor: "white",
+                  color: "#1f1f1f",
+                  textTransform: "none",
                   fontSize: "1rem",
-                  fontWeight: 500, // Medium weight looks best
+                  fontWeight: 500,
                   fontFamily: "Roboto, sans-serif",
-                  boxShadow: "0 2px 4px 0 rgba(0,0,0,.25)", // Subtle Google shadow
-                  border: "1px solid #dadce0", // Subtle border
+                  boxShadow: "0 2px 4px 0 rgba(0,0,0,.25)",
+                  border: "1px solid #dadce0",
                   "&:hover": {
-                    backgroundColor: "#f8faff", // Very light blue on hover
-                    boxShadow: "0 4px 8px 0 rgba(0,0,0,.25)", // Lift effect on hover
+                    backgroundColor: "#f8faff",
+                    boxShadow: "0 4px 8px 0 rgba(0,0,0,.25)",
                     borderColor: "#d2e3fc",
                   },
                 }}
               >
-                Sign in with Google
+                {isLoading ? (
+                  <CircularProgress size={22} color="inherit" />
+                ) : formState === 0 ? (
+                  "Sign in with Google"
+                ) : (
+                  "Sign up with Google"
+                )}
               </Button>
 
               <Divider sx={{ my: 2, color: "gray" }}>OR</Divider>
