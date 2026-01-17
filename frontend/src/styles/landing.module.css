@@ -111,6 +111,7 @@
 .textSection {
     flex: 1;
     max-width: 650px;
+    margin-top: 32px;
 }
 
 .textSection h1 {
@@ -130,7 +131,7 @@
 
 .textSection p {
     font-size: 1.25rem;
-    color: #999;
+    color: #B3B3B3;
     margin-bottom: 50px;
     line-height: 1.6;
     max-width: 90%;
