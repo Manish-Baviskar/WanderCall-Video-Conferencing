@@ -50,6 +50,9 @@ const BACKEND_URL =
     : "https://wandercallbackend.onrender.com";
 
 export default function Authentication() {
+  const nextTick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -88,7 +91,10 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
 
 
  const handleGoogleLogin = async () => {
-  setIsGoogleLoading(true);  // ✅ immediate feedback
+  setIsGoogleLoading(true);
+
+  // 👇 allow React to render loader FIRST
+  await nextTick();
 
   const result = await warmUpServer();
 
@@ -113,8 +119,10 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
     // Dynamically choose backend URL based on where frontend is running
     
 
-  const handleAuth = async () => {
-  setIsLoginLoading(true);   // ✅ IMMEDIATE FEEDBACK
+ const handleAuth = async () => {
+  setIsLoginLoading(true);
+
+  await nextTick(); // 👈 critical
 
   const result = await warmUpServer();
 
@@ -147,6 +155,7 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
 };
 
 
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -170,7 +179,7 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
       Starting WanderCall server…
     </Typography>
     <Typography sx={{ opacity: 0.7, mt: 1 }}>
-      This happens only the first time.
+      This may take a few seconds
     </Typography>
   </Box>
 )}
