@@ -50,8 +50,7 @@ const BACKEND_URL =
     : "https://wandercallbackend.onrender.com";
 
 export default function Authentication() {
-  const nextTick = () => new Promise(resolve => setTimeout(resolve, 0));
-
+  const nextTick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
@@ -62,128 +61,120 @@ export default function Authentication() {
   const [formState, setFormState] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [isLoginLoading, setIsLoginLoading] = React.useState(false);
-const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
-const [isWarmingUp, setIsWarmingUp] = React.useState(false);
-
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
+  const [isWarmingUp, setIsWarmingUp] = React.useState(false);
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
   const warmUpServer = async () => {
-  const start = Date.now();
+    const start = Date.now();
 
-  try {
-    const res = await fetch(`${BACKEND_URL}/health`, {
-      cache: "no-store",
-    });
+    try {
+      const res = await fetch(`${BACKEND_URL}/health`, {
+        cache: "no-store",
+      });
 
-    const duration = Date.now() - start;
+      const duration = Date.now() - start;
 
-    // If response took more than 800ms → treat as cold start
-    return {
-      ok: res.ok,
-      cold: duration > 800,
-    };
-  } catch {
-    return { ok: false, cold: true };
-  }
-};
-
-
-
- const handleGoogleLogin = async () => {
-  setIsGoogleLoading(true);
-
-  // 👇 allow React to render loader FIRST
-  await nextTick();
-
-  const result = await warmUpServer();
-
-  if (result.cold) {
-    setIsWarmingUp(true);
-  }
-
-  if (!result.ok) {
-    setIsGoogleLoading(false);
-    setIsWarmingUp(false);
-    setError("Server is starting. Please try again.");
-    return;
-  }
-
-  setTimeout(() => {
-    window.location.href = `${BACKEND_URL}/api/v1/users/auth/google`;
-  }, result.cold ? 400 : 0);
-};
-
-
-
-    // Dynamically choose backend URL based on where frontend is running
-    
-
- const handleAuth = async () => {
-  setIsLoginLoading(true);
-
-  await nextTick(); // 👈 critical
-
-  const result = await warmUpServer();
-
-  if (result.cold) {
-    setIsWarmingUp(true);
-  }
-
-  if (!result.ok) {
-    setIsLoginLoading(false);
-    setIsWarmingUp(false);
-    setError("Server is starting. Please try again.");
-    return;
-  }
-
-  try {
-    if (formState === 0) {
-      await handleLogin(username, password);
-    } else {
-      await handleRegister(name, username, password, email);
-      setFormState(0);
-      setMessage("Registration Successful! Please login.");
-      setOpen(true);
+      // If response took more than 800ms → treat as cold start
+      return {
+        ok: res.ok,
+        cold: duration > 800,
+      };
+    } catch {
+      return { ok: false, cold: true };
     }
-  } catch (err) {
-    setError(err.response?.data?.message || "Something went wrong");
-  } finally {
-    setIsLoginLoading(false);
-    setIsWarmingUp(false);
-  }
-};
+  };
 
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
 
+    // 👇 allow React to render loader FIRST
+    await nextTick();
+
+    const result = await warmUpServer();
+
+    if (result.cold) {
+      setIsWarmingUp(true);
+    }
+
+    if (!result.ok) {
+      setIsGoogleLoading(false);
+      setIsWarmingUp(false);
+      setError("Server is starting. Please try again.");
+      return;
+    }
+
+    setTimeout(
+      () => {
+        window.location.href = `${BACKEND_URL}/api/v1/users/auth/google`;
+      },
+      result.cold ? 400 : 0,
+    );
+  };
+
+  // Dynamically choose backend URL based on where frontend is running
+
+  const handleAuth = async () => {
+    setIsLoginLoading(true);
+
+    await nextTick(); // 👈 critical
+
+    const result = await warmUpServer();
+
+    if (result.cold) {
+      setIsWarmingUp(true);
+    }
+
+    if (!result.ok) {
+      setIsLoginLoading(false);
+      setIsWarmingUp(false);
+      setError("Server is starting. Please try again.");
+      return;
+    }
+
+    try {
+      if (formState === 0) {
+        await handleLogin(username, password);
+      } else {
+        await handleRegister(name, username, password, email);
+        setFormState(0);
+        setMessage("Registration Successful! Please login.");
+        setOpen(true);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoginLoading(false);
+      setIsWarmingUp(false);
+    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
 
       {isWarmingUp && (
-  <Box
-    sx={{
-      position: "fixed",
-      inset: 0,
-      zIndex: 2000,
-      bgcolor: "#000",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#fff",
-    }}
-  >
-    <CircularProgress sx={{ color: "#ff9800", mb: 2 }} />
-    <Typography variant="h6">
-      Starting WanderCall server…
-    </Typography>
-    <Typography sx={{ opacity: 0.7, mt: 1 }}>
-      This may take a few seconds
-    </Typography>
-  </Box>
-)}
-
+        <Box
+          sx={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 2000,
+            bgcolor: "#000",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+          }}
+        >
+          <CircularProgress sx={{ color: "#ff9800", mb: 2 }} />
+          <Typography variant="h6">Starting WanderCall server…</Typography>
+          <Typography sx={{ opacity: 0.7, mt: 1 }}>
+            This may take a few seconds
+          </Typography>
+        </Box>
+      )}
 
       <Box
         sx={{
@@ -281,10 +272,15 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
               <Button
                 fullWidth
                 variant="contained"
-                startIcon={!isGoogleLoading && !isWarmingUp && <GoogleLogo />}
                 onClick={handleGoogleLogin}
                 disabled={isGoogleLoading || isWarmingUp}
-
+                startIcon={
+                  isGoogleLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    <GoogleLogo />
+                  )
+                }
                 sx={{
                   mt: 2,
                   mb: 2,
@@ -293,22 +289,12 @@ const [isWarmingUp, setIsWarmingUp] = React.useState(false);
                   textTransform: "none",
                   fontSize: "1rem",
                   fontWeight: 500,
-                  fontFamily: "Roboto, sans-serif",
-                  boxShadow: "0 2px 4px 0 rgba(0,0,0,.25)",
                   border: "1px solid #dadce0",
-                  "&:hover": {
-                    backgroundColor: "#f8faff",
-                    boxShadow: "0 4px 8px 0 rgba(0,0,0,.25)",
-                    borderColor: "#d2e3fc",
-                  },
                 }}
               >
-                {isGoogleLoading
-  ? <CircularProgress size={22} color="inherit" />
-  : formState === 0
-  ? "Sign in with Google"
-  : "Sign up with Google"}
-
+                {formState === 0
+                  ? "Sign in with Google"
+                  : "Sign up with Google"}
               </Button>
 
               <Divider sx={{ my: 2, color: "gray" }}>OR</Divider>
