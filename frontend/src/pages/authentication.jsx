@@ -58,8 +58,10 @@ export default function Authentication() {
   const [message, setMessage] = React.useState("");
   const [formState, setFormState] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isWarmingUp, setIsWarmingUp] = React.useState(false);
+  const [isLoginLoading, setIsLoginLoading] = React.useState(false);
+const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
+const [isWarmingUp, setIsWarmingUp] = React.useState(false);
+
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
@@ -86,14 +88,16 @@ export default function Authentication() {
 
 
  const handleGoogleLogin = async () => {
+  setIsGoogleLoading(true);  // ✅ immediate feedback
+
   const result = await warmUpServer();
 
-  // Only show overlay if backend was cold
   if (result.cold) {
     setIsWarmingUp(true);
   }
 
   if (!result.ok) {
+    setIsGoogleLoading(false);
     setIsWarmingUp(false);
     setError("Server is starting. Please try again.");
     return;
@@ -105,10 +109,13 @@ export default function Authentication() {
 };
 
 
+
     // Dynamically choose backend URL based on where frontend is running
     
 
   const handleAuth = async () => {
+  setIsLoginLoading(true);   // ✅ IMMEDIATE FEEDBACK
+
   const result = await warmUpServer();
 
   if (result.cold) {
@@ -116,13 +123,11 @@ export default function Authentication() {
   }
 
   if (!result.ok) {
+    setIsLoginLoading(false);
     setIsWarmingUp(false);
     setError("Server is starting. Please try again.");
     return;
   }
-
-  setIsWarmingUp(false);
-  setIsLoading(true);
 
   try {
     if (formState === 0) {
@@ -136,7 +141,8 @@ export default function Authentication() {
   } catch (err) {
     setError(err.response?.data?.message || "Something went wrong");
   } finally {
-    setIsLoading(false);
+    setIsLoginLoading(false);
+    setIsWarmingUp(false);
   }
 };
 
@@ -266,9 +272,9 @@ export default function Authentication() {
               <Button
                 fullWidth
                 variant="contained"
-                startIcon={!isLoading && !isWarmingUp && <GoogleLogo />}
+                startIcon={!isGoogleLoading && !isWarmingUp && <GoogleLogo />}
                 onClick={handleGoogleLogin}
-                disabled={isLoading || isWarmingUp}
+                disabled={isGoogleLoading || isWarmingUp}
 
                 sx={{
                   mt: 2,
@@ -288,8 +294,8 @@ export default function Authentication() {
                   },
                 }}
               >
-                {isWarmingUp
-  ? "Preparing Google Sign-In…"
+                {isGoogleLoading
+  ? <CircularProgress size={22} color="inherit" />
   : formState === 0
   ? "Sign in with Google"
   : "Sign up with Google"}
@@ -351,7 +357,7 @@ export default function Authentication() {
                 type="button"
                 fullWidth
                 variant="contained"
-                disabled={isLoading}
+                disabled={isLoginLoading || isWarmingUp}
                 sx={{
                   mt: 3,
                   mb: 2,
@@ -361,7 +367,7 @@ export default function Authentication() {
                 }}
                 onClick={handleAuth}
               >
-                {isLoading ? (
+                {isLoginLoading ? (
                   // Show Spinner
                   <CircularProgress size={24} color="inherit" />
                 ) : // Show Text
