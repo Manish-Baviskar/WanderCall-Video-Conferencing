@@ -216,7 +216,7 @@
         justify-content: center;
         text-align: center;
         padding: 120px 40px 60px; /* Space for fixed navbar */
-        gap: 40px;
+        gap: 0;
     }
 
     .textSection {
@@ -281,7 +281,7 @@
     }
 
     .landingMainContainer {
-        padding: 100px 20px 150px 20px;
+        padding: 55px 20px 25px;
     }
 
     .textSection h1 {
