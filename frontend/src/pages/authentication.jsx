@@ -54,21 +54,57 @@ export default function Authentication() {
   const [formState, setFormState] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isWarmingUp, setIsWarmingUp] = React.useState(false);
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
-  const handleGoogleLogin = () => {
+  const warmUpServer = async () => {
+  try {
+    const backendUrl =
+      window.location.hostname === "localhost"
+        ? "http://localhost:8080"
+        : "https://wandercallbackend.onrender.com";
+
+    const res = await fetch(`${backendUrl}/health`, {
+      cache: "no-store",
+    });
+
+    return res.ok;
+  } catch {
+    return false;
+  }
+};
+
+
+  const handleGoogleLogin = async () => {
+
+    setIsWarmingUp(true);
+
+    const backendReady = await warmUpServer();
+
+    if (!backendReady) {
+    setIsWarmingUp(false);
+    setError("Server is starting. Please try again in a moment.");
+    return;
+  }
+
     // Dynamically choose backend URL based on where frontend is running
     const backendUrl =
       window.location.hostname === "localhost"
-        ? "http://localhost:8000"
+        ? "http://localhost:8080"
         : "https://wandercallbackend.onrender.com"; // Your LIVE Backend URL
 
     // Redirect browser to the backend trigger route
+    setTimeout(() => {
     window.location.href = `${backendUrl}/api/v1/users/auth/google`;
+  }, 400);
   };
 
   const handleAuth = async () => {
+    setIsWarmingUp(true);
+  await warmUpServer();
+  setIsWarmingUp(false);
+
     setIsLoading(true);
     try {
       if (formState === 0) {
@@ -95,6 +131,31 @@ export default function Authentication() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
+
+      {isWarmingUp && (
+  <Box
+    sx={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 2000,
+      bgcolor: "#000",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+    }}
+  >
+    <CircularProgress sx={{ color: "#ff9800", mb: 2 }} />
+    <Typography variant="h6">
+      Starting WanderCall server…
+    </Typography>
+    <Typography sx={{ opacity: 0.7, mt: 1 }}>
+      This happens only the first time.
+    </Typography>
+  </Box>
+)}
+
 
       <Box
         sx={{
@@ -192,9 +253,10 @@ export default function Authentication() {
               <Button
                 fullWidth
                 variant="contained"
-                startIcon={!isLoading && <GoogleLogo />}
+                startIcon={!isLoading && !isWarmingUp && <GoogleLogo />}
                 onClick={handleGoogleLogin}
-                disabled={isLoading}
+                disabled={isLoading || isWarmingUp}
+
                 sx={{
                   mt: 2,
                   mb: 2,
@@ -213,13 +275,12 @@ export default function Authentication() {
                   },
                 }}
               >
-                {isLoading ? (
-                  <CircularProgress size={22} color="inherit" />
-                ) : formState === 0 ? (
-                  "Sign in with Google"
-                ) : (
-                  "Sign up with Google"
-                )}
+                {isWarmingUp
+  ? "Preparing Google Sign-In…"
+  : formState === 0
+  ? "Sign in with Google"
+  : "Sign up with Google"}
+
               </Button>
 
               <Divider sx={{ my: 2, color: "gray" }}>OR</Divider>
