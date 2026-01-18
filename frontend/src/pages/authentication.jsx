@@ -66,72 +66,58 @@ export default function Authentication() {
 
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
-  const warmUpServer = async () => {
-    const start = Date.now();
-
+  // Helper: Just pings the server. We don't care about the return value structure as much
+  // as simply waiting for it to respond.
+  const checkServerHealth = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/health`, {
-        cache: "no-store",
-      });
-
-      const duration = Date.now() - start;
-
-      // If response took more than 800ms → treat as cold start
-      return {
-        ok: res.ok,
-        cold: duration > 800,
-      };
-    } catch {
-      return { ok: false, cold: true };
+      await fetch(`${BACKEND_URL}/health`, { cache: "no-store" });
+      return true;
+    } catch (err) {
+      return false;
     }
   };
 
+  // --- GOOGLE LOGIN FIX ---
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
-
-    // 👇 allow React to render loader FIRST
-    await nextTick();
-
-    const result = await warmUpServer();
-
-    if (result.cold) {
+    setError("");
+    
+    // 1. Start the Safety Timer immediately
+    // If server takes > 1.5s to respond to health check, show overlay
+    const safetyTimer = setTimeout(() => {
       setIsWarmingUp(true);
-    }
+    }, 1500);
 
-    if (!result.ok) {
-      setIsGoogleLoading(false);
+    try {
+      // 2. Wait for server to wake up BEFORE redirecting.
+      // This keeps the user in the React app (viewing the overlay)
+      // instead of hanging on a white browser screen.
+      await checkServerHealth();
+      
+      // 3. Server is awake! Proceed to redirect.
+      window.location.href = `${BACKEND_URL}/api/v1/users/auth/google`;
+      
+    } catch (error) {
+      console.error("Google Auth Error:", error);
       setIsWarmingUp(false);
-      setError("Server is starting. Please try again.");
-      return;
+      setIsGoogleLoading(false);
+    } finally {
+       // Note: We don't clear loading state here typically because 
+       // the page is about to redirect (unload).
+       // But if fetch failed, we should:
+       clearTimeout(safetyTimer);
     }
-
-    setTimeout(
-      () => {
-        window.location.href = `${BACKEND_URL}/api/v1/users/auth/google`;
-      },
-      result.cold ? 400 : 0,
-    );
   };
 
-  // Dynamically choose backend URL based on where frontend is running
-
+  // --- REGULAR LOGIN/REGISTER FIX ---
   const handleAuth = async () => {
     setIsLoginLoading(true);
+    setError("");
 
-    await nextTick(); // 👈 critical
-
-    const result = await warmUpServer();
-
-    if (result.cold) {
+    // 1. Start Safety Timer
+    const safetyTimer = setTimeout(() => {
       setIsWarmingUp(true);
-    }
-
-    if (!result.ok) {
-      setIsLoginLoading(false);
-      setIsWarmingUp(false);
-      setError("Server is starting. Please try again.");
-      return;
-    }
+    }, 1500);
 
     try {
       if (formState === 0) {
@@ -145,6 +131,8 @@ export default function Authentication() {
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
+      // 2. Always cleanup
+      clearTimeout(safetyTimer);
       setIsLoginLoading(false);
       setIsWarmingUp(false);
     }
@@ -160,7 +148,7 @@ export default function Authentication() {
             position: "fixed",
             inset: 0,
             zIndex: 2000,
-            bgcolor: "#000",
+            bgcolor: "rgba(0,0,0,0.9)", // Slightly transparent black
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -171,7 +159,7 @@ export default function Authentication() {
           <CircularProgress sx={{ color: "#ff9800", mb: 2 }} />
           <Typography variant="h6">Starting WanderCall server…</Typography>
           <Typography sx={{ opacity: 0.7, mt: 1 }}>
-            This may take a few seconds
+            This may take up to 30 seconds...
           </Typography>
         </Box>
       )}
