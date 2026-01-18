@@ -25,9 +25,9 @@ A robust full-stack video conferencing application built with the MERN stack. Wa
     <td align="center"><b>Home Dashboard</b></td>
   </tr>
   <tr>
-    <td><img src="assets/landingPage.webp" width="100%" /></td>
-    <td><img src="assets/loginSignupPage.webp" width="100%" /></td>
-    <td><img src="assets/homePage.webp" width="100%" /></td>
+    <td><img src="assets/landingPage.png" width="100%" /></td>
+    <td><img src="assets/loginSignupPage.png" width="100%" /></td>
+    <td><img src="assets/homePage.png" width="100%" /></td>
   </tr>
   <tr>
     <td align="center"><b>Meeting History</b></td>
@@ -35,9 +35,9 @@ A robust full-stack video conferencing application built with the MERN stack. Wa
     <td align="center"><b>In-Call Chat</b></td>
   </tr>
   <tr>
-    <td><img src="assets/meetingHistory.webp" width="100%" /></td>
-    <td><img src="assets/chatMeetView.webp" width="100%" /></td>
-    <td><img src="assets/meetView.webp" width="100%" /></td>
+    <td><img src="assets/meetingHistory.png" width="100%" /></td>
+    <td><img src="assets/chatMeetView.png" width="100%" /></td>
+    <td><img src="assets/meetView.png" width="100%" /></td>
   </tr>
 </table>
 
