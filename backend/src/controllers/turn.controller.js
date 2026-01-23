@@ -3,19 +3,23 @@ import axios from 'axios';
 
 export const getTurnCredentials = async (req, res) => {
   try {
-    const apiKey = (process.env.METERED_SECRET_KEY || "").trim();
-    const domain = (process.env.METERED_DOMAIN || "").trim();
+    // ⚠️ HARDCODING FOR TESTING ONLY ⚠️
+    // Paste the values DIRECTLY from the Metered "Developers" tab.
+    // Do NOT use process.env here.
+    
+    const HARDCODED_DOMAIN = "wandercall.metered.live"; 
+    const HARDCODED_KEY = "vJvjlIgGhFOv0IR4r5TQjljdbiWdb6xrZqF4jbqz__iccO2v"; // <--- PASTE YOUR FULL KEY HERE INSIDE THE QUOTES
 
-    // Debug to confirm the clean key
-    console.log(`Using Key: ${apiKey.substring(0, 5)}... (Length: ${apiKey.length})`);
+    console.log("Testing with Hardcoded Credentials...");
 
     const response = await axios.get(
-      `https://${domain}/api/v1/turn/credentials?apiKey=${apiKey}`
+      `https://${HARDCODED_DOMAIN}/api/v1/turn/credentials?apiKey=${HARDCODED_KEY}`
     );
     
+    console.log("SUCCESS! Got credentials from Metered.");
     res.json(response.data); 
   } catch (error) {
-    console.error("FULL ERROR FROM METERED:", error.response?.data || error.message);
+    console.error("HARDCODE TEST FAILED:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to fetch credentials" });
   }
 };
