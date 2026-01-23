@@ -392,6 +392,10 @@ export default function VideoMeetComponent() {
     var signal = JSON.parse(message);
 
     if (fromId !== socketIdRef.current) {
+      if (!connections[fromId]) {
+            console.warn(`Skipping signal from ${fromId} because connection is not ready yet.`);
+            return; 
+        }
       if (signal.sdp) {
         connections[fromId]
           .setRemoteDescription(new RTCSessionDescription(signal.sdp))
