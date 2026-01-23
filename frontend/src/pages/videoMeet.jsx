@@ -467,7 +467,7 @@ export default function VideoMeetComponent() {
           connections[socketListId] = new RTCPeerConnection({
             iceServers: iceServers,
             // iceTransportPolicy: "all"
-            iceTransportPolicy: "relay"
+            iceTransportPolicy: "all"
              // Optional: "relay" forces TURN (good for debug, bad for cost)
           });
 
