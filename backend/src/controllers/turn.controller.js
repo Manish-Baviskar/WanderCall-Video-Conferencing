@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getTurnCredentials = async (req, res) => {
   try {
-    const apiKey = process.env.METERED_SECRET_KEY || "";
+    const apiKey = process.env.METERED_SECET_KEY || "";
     const domain = process.env.METERED_DOMAIN || "";
 
     // 🕵️ DEBUG LOGS (Check your Render Logs for these lines!)
