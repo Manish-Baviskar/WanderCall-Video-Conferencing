@@ -3,16 +3,11 @@ import axios from 'axios';
 
 export const getTurnCredentials = async (req, res) => {
   try {
-    const apiKey = process.env.METERED_SECET_KEY || "";
-    const domain = process.env.METERED_DOMAIN || "";
+    const apiKey = (process.env.METERED_SECRET_KEY || "").trim();
+    const domain = (process.env.METERED_DOMAIN || "").trim();
 
-    // 🕵️ DEBUG LOGS (Check your Render Logs for these lines!)
-    console.log("--- DEBUG START ---");
-    console.log(`Domain being used: '${domain}'`); 
-    console.log(`Key length: ${apiKey.length}`); // If length is 0, key is missing.
-    console.log(`Key starts with: ${apiKey.substring(0, 4)}...`); // Verify it matches the website
-    console.log(`Key ends with space?: ${apiKey.endsWith(" ") ? "YES (BAD!)" : "NO (Good)"}`);
-    console.log("--- DEBUG END ---");
+    // Debug to confirm the clean key
+    console.log(`Using Key: ${apiKey.substring(0, 5)}... (Length: ${apiKey.length})`);
 
     const response = await axios.get(
       `https://${domain}/api/v1/turn/credentials?apiKey=${apiKey}`
