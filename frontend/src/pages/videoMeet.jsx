@@ -21,9 +21,9 @@ const server_url = server;
 
 var connections = {};
 
-const peerConfigConnections = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-};
+// const peerConfigConnections = {
+//   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+// };
 
 export default function VideoMeetComponent() {
   const meetingCodeRef = useRef(null);
@@ -72,6 +72,25 @@ export default function VideoMeetComponent() {
   let [videos, setVideos] = useState([]);
 
   const { addToUserHistory } = useContext(AuthContext);
+
+  // --- NEW HELPER FUNCTION TO FETCH TURN CREDENTIALS ---
+  const getTurnIceServers = async () => {
+    try {
+      // Fetch credentials from YOUR backend
+      const response = await axios.get(`${server_url}/api/v1/users/get-turn-credentials`);
+      
+      // Combine Google's free STUN with your Metered TURN servers
+      const iceServers = [
+        { urls: "stun:stun.l.google.com:19302" },
+        ...response.data // The array from Metered.ca
+      ];
+      
+      return iceServers;
+    } catch (err) {
+      console.error("Failed to fetch TURN credentials, using STUN only", err);
+      return [{ urls: "stun:stun.l.google.com:19302" }];
+    }
+  };
 
   const markLeave = async () => {
     try {
@@ -433,11 +452,20 @@ export default function VideoMeetComponent() {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients) => {
+      socketRef.current.on("user-joined", async (id, clients) => {
+        
+        // 1. Fetch the credentials BEFORE creating any connections
+        const iceServers = await getTurnIceServers();
+
         clients.forEach((socketListId) => {
-          connections[socketListId] = new RTCPeerConnection(
-            peerConfigConnections
-          );
+          
+          // 2. Use the fetched iceServers here
+          connections[socketListId] = new RTCPeerConnection({
+            iceServers: iceServers,
+            // iceTransportPolicy: "all"
+            iceTransportPolicy: "relay"
+             // Optional: "relay" forces TURN (good for debug, bad for cost)
+          });
 
           connections[socketListId].onicecandidate = function (event) {
             if (event.candidate != null) {

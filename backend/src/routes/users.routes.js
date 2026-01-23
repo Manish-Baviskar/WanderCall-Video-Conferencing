@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { addToHistory, getUserHistory, login, register, updateLeaveTime } from "../controllers/user.controller.js";
+import { getTurnCredentials } from "../controllers/turn.controller.js";
 import passport from "passport";
 import crypto from "crypto"; // <--- Make sure this is imported
 
@@ -51,5 +52,7 @@ router.route("/auth/google/callback").get(
     }
   }
 );
+
+router.get("/get-turn-credentials", getTurnCredentials);
 
 export default router;
